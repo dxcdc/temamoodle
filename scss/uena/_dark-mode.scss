@@ -1,0 +1,129 @@
+/* Uena Dark Mode Overrides */
+body[data-theme-version="dark"], body.dark-mode {
+    background-color: #050505 !important;
+    color: #e0e0e0;
+    
+    #page, #page-wrapper, .main-inner, #page-content, #region-main, .bg-white, .bg-light {
+        background-color: #050505 !important;
+        color: #e0e0e0 !important; /* Soft white for body text */
+    }
+
+    /* Cards visibility improvement */
+    .card, .authincation-content {
+        background-color: #222222 !important; /* Lighter background for better contrast */
+        border: 1px solid #333333 !important; /* Visible border */
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5) !important; /* Deeper shadow */
+        color: #e0e0e0 !important;
+        
+        /* Make subtitle and secondary text fully visible */
+        .text-muted, .muted, .card-text, .card-subtitle, .text-secondary, small, .small {
+            color: #ffffff !important;
+        }
+    }
+
+    /* Bulletproof course cards styling in Dark Mode */
+    .course-card, .dashboard-card {
+        background-color: #222222 !important;
+        border: 1px solid #333333 !important;
+        
+        a, span, div, p, .coursename, .text-muted, .muted, small, .small {
+            color: #ffffff !important;
+        }
+    }
+
+    .header, .drawer, .navbar.fixed-top {
+        background-color: #141414 !important;
+        border-color: #2c2c2c !important;
+        box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.5) !important;
+        color: #e0e0e0;
+    }
+    
+    /* Navbar navigation links */
+    .navbar.fixed-top {
+        .nav-link, .navigation-link {
+            color: #b0b0b0 !important;
+            background: none !important;
+        }
+        .nav-link:hover, .nav-link.active, .navigation-link.active, .navigation-link:hover {
+            color: #fff !important;
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            border-radius: 0.5rem;
+        }
+    }
+
+    /* Tabs container overrides (Removes the white box and dropdown glitches) */
+    .nav-tabs, .nav-pills, .moremenu, .dropdown-menu {
+        background-color: #141414 !important;
+        border-color: #2c2c2c !important;
+        border-radius: 0.5rem;
+        padding: 0.25rem;
+        
+        .nav-item, li {
+            background-color: transparent !important;
+        }
+        
+        .nav-link, .dropdown-item {
+            color: #b0b0b0 !important;
+            border: none !important;
+            background: none !important;
+            margin: 0 0.2rem;
+            padding: 0.5rem 1rem;
+        }
+        .nav-link:hover, .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            color: #fff !important;
+            border-radius: 0.375rem;
+        }
+        .nav-link.active, .dropdown-item.active {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            border-radius: 0.375rem;
+            border: 1px solid #333 !important;
+        }
+    }
+
+    /* Force all text links and text-primary to be white/soft-white, NOT orange */
+    a, .text-primary, a.text-primary, .text-primary a, .nav-link {
+        color: #e0e0e0 !important;
+    }
+    a:hover {
+        color: #ffffff !important;
+    }
+    
+    /* Toggle icon styling */
+    #dark-mode-toggle {
+        color: #fff !important;
+    }
+    
+    .drawer .list-group-item {
+        color: #b0b0b0;
+    }
+    
+    .drawer .list-group-item:hover, .drawer .list-group-item.active {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        color: #fff !important;
+    }
+
+    .text-primary, h1, h2, h3, h4, h5, h6, .card-title, .card-subtitle {
+        color: #ffffff !important; /* Pure white for headers */
+    }
+
+    .navbar-brand {
+        color: #ffffff !important;
+    }
+
+    input.form-control, .form-control,
+    .searchbar input.form-control, 
+    .simplesearchform input.form-control,
+    input[data-action="search"] {
+        background-color: #1a1a1a !important;
+        border-color: #333333 !important;
+        color: #fff !important;
+    }
+    
+    .btn-light, .btn-secondary {
+        background-color: #222 !important;
+        border-color: #333 !important;
+        color: #e0e0e0 !important;
+    }
+}

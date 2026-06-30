@@ -1,0 +1,297 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_boost/footer
+
+    Page footer with custom floating accessibility widget.
+}}
+
+<footer id="page-footer" class="footer-popover bg-white">
+    <div data-region="footer-container-popover">
+        {{#output.has_communication_links}}
+            <button onclick="window.open('{{output.communication_url}}', '_blank', 'noreferrer')" class="btn btn-icon rounded-circle bg-primary text-white btn-footer-communication" aria-label="{{#str}}communicationroomlink, course{{/str}}">
+                {{#pix}}t/messages-o, core{{/pix}}
+            </button>
+        {{/output.has_communication_links}}
+        <button class="btn btn-icon rounded-circle bg-secondary btn-footer-popover" data-action="footer-popover" aria-label="{{#str}}showfooter, theme_boost{{/str}}">
+            {{#pix}}e/question, core{{/pix}}
+        </button>
+    </div>
+    <div class="footer-content-popover container" data-region="footer-content-popover">
+        {{#output.has_communication_links}}
+            <div class="footer-section p-3 border-bottom footer-link-communication">
+                <div class="footer-support-link">{{{ output.communication_link }}}</div>
+            </div>
+        {{/output.has_communication_links}}
+        {{# output.has_popover_links }}
+            <div class="footer-section p-3 border-bottom">
+                {{# output.page_doc_link }}
+                    <div class="footer-support-link">{{{ output.page_doc_link }}}</div>
+                {{/ output.page_doc_link }}
+
+                {{# output.services_support_link }}
+                    <div class="footer-support-link">{{{ output.services_support_link }}}</div>
+                {{/ output.services_support_link }}
+
+                {{# output.supportemail }}
+                    <div class="footer-support-link">{{{ output.supportemail }}}</div>
+                {{/ output.supportemail }}
+            </div>
+        {{/ output.has_popover_links }}
+        <div class="footer-section p-3 border-bottom">
+            <div class="logininfo">
+                {{{ output.login_info }}}
+            </div>
+            <div class="tool_usertours-resettourcontainer">
+            </div>
+            {{# output.telemetry_traceid }}
+                <div>
+                    <span id="telemetry_traceid" class="d-none">
+                        {{{ output.telemetry_traceid }}}
+                    </span>
+                    <a href="#" data-action="copytoclipboard" data-clipboard-target="#telemetry_traceid"
+                            data-clipboard-success-message="{{#str}}telemetrytraceidfooterlinkcopied, core{{/str}}">
+                        {{#str}}telemetrytraceidfooterlink, core{{/str}}
+                    </a>
+                </div>
+            {{/ output.telemetry_traceid }}
+            {{{ output.standard_footer_html }}}
+            {{{ output.standard_end_of_body_html }}}
+        </div>
+        <div class="footer-section p-3">
+            <div>{{#str}}poweredbymoodle, core{{/str}}</div>
+            {{#output.moodle_release}}
+                <div>
+                    {{#str}}version, core{{/str}} {{{ output.moodle_release }}}
+                </div>
+            {{/output.moodle_release}}
+        </div>
+    </div>
+
+    <div class="footer-content-debugging footer-dark bg-dark text-light">
+        <div class="container-fluid footer-dark-inner">
+            {{{ output.debug_footer_html }}}
+        </div>
+    </div>
+</footer>
+
+<!-- Accessibility Widget Panel -->
+<div class="accessibility-widget-container" style="position: fixed; right: 20px; bottom: 185px; z-index: 1040;">
+    <button class="btn btn-icon rounded-circle bg-dark text-white d-flex align-items-center justify-content-center shadow-lg" 
+            style="width: 45px; height: 45px; border: 2px solid #F6A02A;" 
+            data-action="accessibility-toggle" 
+            aria-label="Menu de Acessibilidade" 
+            title="Acessibilidade">
+        <i class="fa-solid fa-universal-access fa-lg"></i>
+    </button>
+
+    <div id="accessibility-panel" class="card shadow-lg d-none p-2" 
+         style="position: absolute; bottom: 55px; right: 0; left: auto; width: 350px; border-radius: 0.75rem; border: 1px solid #ced4da; background-color: #ffffff; z-index: 1045; max-height: calc(100vh - 300px); overflow-y: auto;">
+        
+        <!-- Navigation Tab Headers -->
+        <ul class="nav nav-tabs mb-2 border-bottom-0" id="accessibilityTab" role="tablist" style="font-size: 0.75rem; display: flex;">
+            <li class="nav-item" role="presentation" style="flex: 1; text-align: center;">
+                <button class="nav-link active py-1 px-2 text-dark font-weight-bold w-100 border-0 border-bottom" id="access-tab" data-bs-toggle="tab" data-bs-target="#access-pane" type="button" role="tab" aria-controls="access-pane" aria-selected="true" style="border-radius: 0;">Acessibilidade</button>
+            </li>
+            <li class="nav-item" role="presentation" style="flex: 1; text-align: center;">
+                <button class="nav-link py-1 px-2 text-dark font-weight-bold w-100 border-0 border-bottom" id="style-tab" data-bs-toggle="tab" data-bs-target="#style-pane" type="button" role="tab" aria-controls="style-pane" aria-selected="false" style="border-radius: 0;">Aparência</button>
+            </li>
+        </ul>
+        
+        <!-- Tab Panes Content -->
+        <div class="tab-content pt-1" id="accessibilityTabContent" style="font-size: 0.825rem;">
+            <!-- Pane 1: Accessibility -->
+            <div class="tab-pane fade show active" id="access-pane" role="tabpanel" aria-labelledby="access-tab">
+                <div class="d-flex flex-column gap-1">
+                    <!-- Font Scale -->
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <span class="font-weight-bold text-muted">Tamanho da Fonte:</span>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button class="btn btn-outline-secondary font-weight-bold py-1 px-3" data-accessibility="font-decrease" aria-label="Diminuir fonte" title="Diminuir fonte">A-</button>
+                            <button class="btn btn-outline-secondary font-weight-bold py-1 px-3" data-accessibility="font-increase" aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
+                        </div>
+                    </div>
+ 
+                    <!-- Grayscale -->
+                    <button class="btn btn-sm btn-outline-secondary text-start d-flex align-items-center justify-content-between py-1.5 px-3 mb-1" 
+                            data-accessibility="grayscale" 
+                            aria-label="Escala de cinza" 
+                            title="Escala de cinza"
+                            style="border-radius: 0.5rem;">
+                        <span><i class="fa-solid fa-palette me-2"></i> Escala de cinza</span>
+                    </button>
+ 
+                    <!-- Toggle Toasts -->
+                    <button class="btn btn-sm btn-outline-secondary text-start d-flex align-items-center justify-content-between py-1.5 px-3 mb-1" 
+                            data-accessibility="toggle-toasts" 
+                            aria-label="Notificações flutuantes" 
+                            title="Ligar ou desligar os avisos rápidos no canto da tela"
+                            style="border-radius: 0.5rem;">
+                        <span><i class="fa-solid fa-bell me-2"></i> Notificações Toasts</span>
+                        <span class="badge bg-success ms-2" id="toast-status-badge">Ativas</span>
+                    </button>
+ 
+                    <!-- High Contrast -->
+                    <button class="btn btn-sm btn-outline-secondary text-start d-flex align-items-center justify-content-between py-1.5 px-3 mb-1" 
+                            data-accessibility="contrast" 
+                            aria-label="Alto contraste" 
+                            title="Alto contraste"
+                            style="border-radius: 0.5rem;">
+                        <span><i class="fa-solid fa-circle-half-stroke me-2"></i> Alto contraste</span>
+                    </button>
+ 
+                    <!-- Dark / Light Themes -->
+                    <div class="row g-2 mb-0">
+                        <div class="col-6">
+                            <button class="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center py-1.5" 
+                                    data-accessibility="lightmode" 
+                                    aria-label="Modo claro" 
+                                    title="Modo claro"
+                                    style="border-radius: 0.5rem;">
+                                <i class="fa-solid fa-sun me-1"></i> Modo claro
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center py-1.5" 
+                                    data-accessibility="darkmode" 
+                                    aria-label="Modo escuro" 
+                                    title="Modo escuro"
+                                    style="border-radius: 0.5rem;">
+                                <i class="fa-solid fa-moon me-1"></i> Modo escuro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pane 2: Custom Styles -->
+            <div class="tab-pane fade" id="style-pane" role="tabpanel" aria-labelledby="style-tab">
+                <div class="d-flex flex-column gap-1">
+                    <!-- Theme presets -->
+                    <div class="d-flex flex-column gap-1 mb-2">
+                        <span class="font-weight-bold text-muted small">Modelos de Tema (Cores):</span>
+                        <div class="d-flex gap-1 justify-content-between">
+                            <button class="btn btn-xs btn-outline-secondary flex-grow-1 py-1 px-2" data-preset="orange" style="border-radius: 0.5rem; font-size: 0.7rem; font-weight: 600;" title="Laranja CDC">
+                                <i class="fa-solid fa-palette text-warning me-1"></i> Laranja CDC
+                            </button>
+                            <button class="btn btn-xs btn-outline-secondary flex-grow-1 py-1 px-2" data-preset="blue" style="border-radius: 0.5rem; font-size: 0.7rem; font-weight: 600;" title="Azul Oceano">
+                                <i class="fa-solid fa-palette text-primary me-1"></i> Azul Oceano
+                            </button>
+                            <button class="btn btn-xs btn-outline-secondary flex-grow-1 py-1 px-2" data-preset="green" style="border-radius: 0.5rem; font-size: 0.7rem; font-weight: 600;" title="Verde Floresta">
+                                <i class="fa-solid fa-palette text-success me-1"></i> Verde Floresta
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Layout container dropdown -->
+                    <div class="d-flex flex-column gap-1 mb-2">
+                        <span class="font-weight-bold text-muted small">Largura do Container (Layout):</span>
+                        <select class="form-select form-select-sm" data-style-action="layout-container" style="border-radius: 0.5rem; font-size: 0.8rem; padding-top: 0.25rem; padding-bottom: 0.25rem;">
+                            <option value="wide">Wide (Tela Cheia)</option>
+                            <option value="boxed">Boxed (Centralizado / 1200px)</option>
+                            <option value="wideboxed">Wide Boxed (Semi-Centralizado / 1500px)</option>
+                        </select>
+                    </div>
+
+                    <!-- Font family dropdown -->
+                    <div class="d-flex flex-column gap-1 mb-1">
+                        <span class="font-weight-bold text-muted">Fonte do Texto:</span>
+                        <select class="form-select form-select-sm" data-style-action="font-family" style="border-radius: 0.5rem; font-size: 0.8rem; padding-top: 0.25rem; padding-bottom: 0.25rem;">
+                            <option value="inherit">Padrão do Tema</option>
+                            <option value='"OpenDyslexic", "Comic Sans MS", cursive, sans-serif'>OpenDyslexic (Dislexia)</option>
+                            <option value='"Georgia", "Times New Roman", Times, serif'>Serifada (Leitura)</option>
+                            <option value='"SFMono-Regular", Menlo, Monaco, Consolas, "Courier New", monospace'>Monospace (Espaçada)</option>
+                        </select>
+                    </div>
+
+                    <!-- Theme and Font Colors row -->
+                    <div class="row g-2 mb-1.5">
+                        <div class="col-6">
+                            <span class="font-weight-bold text-muted d-block mb-1 small">Cor do Tema:</span>
+                            <div class="d-flex flex-wrap gap-1 justify-content-start px-1">
+                                <!-- Row 1 -->
+                                <button class="color-swatch" data-style-color="inherit" data-style-color-hover="#db891b" style="width: 20px; height: 20px; background: repeating-linear-gradient(45deg, #ffffff, #ffffff 4px, #cccccc 4px, #cccccc 8px); cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Padrão" title="Padrão"></button>
+                                <button class="color-swatch" data-style-color="#6F42C1" data-style-color-hover="#59359a" style="width: 20px; height: 20px; background-color: #6F42C1; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Roxo" title="Roxo"></button>
+                                <button class="color-swatch" data-style-color="#FF6F00" data-style-color-hover="#d95f00" style="width: 20px; height: 20px; background-color: #FF6F00; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Laranja Avermelhado" title="Laranja Avermelhado"></button>
+                                <button class="color-swatch" data-style-color="#E91E63" data-style-color-hover="#c2185b" style="width: 20px; height: 20px; background-color: #E91E63; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Rosa Shock" title="Rosa Shock"></button>
+                                <button class="color-swatch" data-style-color="#D32F2F" data-style-color-hover="#b71c1c" style="width: 20px; height: 20px; background-color: #D32F2F; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Vermelho" title="Vermelho"></button>
+                                <button class="color-swatch" data-style-color="#F6A02A" data-style-color-hover="#db891b" style="width: 20px; height: 20px; background-color: #F6A02A; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Dourado" title="Dourado"></button>
+                                <button class="color-swatch" data-style-color="#FFC107" data-style-color-hover="#ffb300" style="width: 20px; height: 20px; background-color: #FFC107; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Amarelo" title="Amarelo"></button>
+                                <button class="color-swatch" data-style-color="#28A745" data-style-color-hover="#218838" style="width: 20px; height: 20px; background-color: #28A745; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Verde" title="Verde"></button>
+                                <button class="color-swatch" data-style-color="#20C997" data-style-color-hover="#1aa179" style="width: 20px; height: 20px; background-color: #20C997; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Verde Turquesa" title="Verde Turquesa"></button>
+                                <button class="color-swatch" data-style-color="#00BCD4" data-style-color-hover="#00acc1" style="width: 20px; height: 20px; background-color: #00BCD4; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Ciano" title="Ciano"></button>
+                                <button class="color-swatch" data-style-color="#6C757D" data-style-color-hover="#5a6268" style="width: 20px; height: 20px; background-color: #6C757D; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Cinza" title="Cinza"></button>
+                                <button class="color-swatch" data-style-color="#343A40" data-style-color-hover="#23272b" style="width: 20px; height: 20px; background-color: #343A40; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Cinza Escuro" title="Cinza Escuro"></button>
+                                <button class="color-swatch" data-style-color="#111111" data-style-color-hover="#000000" style="width: 20px; height: 20px; background-color: #111111; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Preto" title="Preto"></button>
+                                <button class="color-swatch" data-style-color="#0D6EFD" data-style-color-hover="#0b5ed7" style="width: 20px; height: 20px; background-color: #0D6EFD; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Azul" title="Azul"></button>
+                                <button class="color-swatch" data-style-color="#4CAF50" data-style-color-hover="#43a047" style="width: 20px; height: 20px; background-color: #4CAF50; cursor: pointer; outline: none; border: 2px solid transparent !important; border-radius: 4px !important;" aria-label="Verde Claro" title="Verde Claro"></button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <span class="font-weight-bold text-muted d-block mb-1 small">Cor do Texto:</span>
+                            <div class="d-flex flex-wrap gap-1 justify-content-start px-1">
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#1d2125" style="width: 20px; height: 20px; background-color: #1d2125; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Preto" title="Preto"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#495057" style="width: 20px; height: 20px; background-color: #495057; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Cinza Escuro" title="Cinza Escuro"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#0F2C59" style="width: 20px; height: 20px; background-color: #0F2C59; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Azul Escuro" title="Azul Escuro"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#3C2A21" style="width: 20px; height: 20px; background-color: #3C2A21; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Marrom Escuro" title="Marrom Escuro"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#3B0A45" style="width: 20px; height: 20px; background-color: #3B0A45; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Roxo Escuro" title="Roxo Escuro"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#1E351E" style="width: 20px; height: 20px; background-color: #1E351E; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Verde Musgo" title="Verde Musgo"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#5C0612" style="width: 20px; height: 20px; background-color: #5C0612; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Vinho" title="Vinho"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#2B303A" style="width: 20px; height: 20px; background-color: #2B303A; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Grafite" title="Grafite"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#ffffff" style="width: 20px; height: 20px; background-color: #ffffff; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Branco" title="Branco"></button>
+                                <button class="rounded-circle text-color-swatch" data-style-text-color="#f8f9fa" style="width: 20px; height: 20px; background-color: #f8f9fa; cursor: pointer; outline: none; border: 1px solid #ced4da !important;" aria-label="Branco Gelo" title="Branco Gelo"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Header style controls -->
+                    <div class="d-flex flex-column gap-1 mb-1">
+                        <span class="font-weight-bold text-muted small">Cabeçalho de Navegação:</span>
+                        <div class="btn-group btn-group-sm w-100" role="group">
+                            <button class="btn btn-outline-secondary py-1" data-style-header="light" aria-label="Cabeçalho Claro" title="Cabeçalho Claro">Claro</button>
+                            <button class="btn btn-outline-secondary py-1" data-style-header="dark" aria-label="Cabeçalho Escuro" title="Cabeçalho Escuro">Escuro</button>
+                            <button class="btn btn-outline-secondary py-1" data-style-header="theme" aria-label="Cabeçalho Temático" title="Cabeçalho Temático">Tema</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Global Reset (Shared) -->
+            <button class="btn btn-sm btn-danger text-white d-flex align-items-center justify-content-center py-1.5 mt-2 w-100" 
+                    data-accessibility="reset" 
+                    aria-label="Restaurar padrão" 
+                    title="Restaurar padrão"
+                    style="border-radius: 0.5rem; background-color: #d9534f; border-color: #d43f3a;">
+                <i class="fa-solid fa-rotate-left me-1"></i> Restaurar padrão
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- OpenDyslexic Font CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-dyslexic@1.1.1/open-dyslexic.css">
+
+{{#js}}
+require([
+    'theme_boost/footer-popover',
+    'core/copy_to_clipboard',
+    'theme_cdc_moodle/accessibility'
+], function(FooterPopover, CopyToClipboard, Accessibility) {
+    FooterPopover.init();
+    Accessibility.init();
+});
+{{/js}}

@@ -1,0 +1,99 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/local/toast/message
+
+    Template to render a Toast notification.
+}}
+<div id="toast-{{uniqid}}" class="toast {{#type}}toast-{{type}}{{/type}} {{#visuallyHidden}}visually-hidden{{/visuallyHidden}}" data-bs-delay="{{delay}}" {{^autohide}}data-bs-autohide="false"{{/autohide}} role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-body d-flex align-items-center p-3">
+        <!-- Left Side Icon with orange dot indicator -->
+        <div class="toast-alert-icon-container position-relative me-3">
+            <div class="toast-alert-icon">
+                <i class="fa-solid" style="font-size: 1.25rem;"></i>
+            </div>
+            <!-- Orange badge dot -->
+            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle" style="width: 10px; height: 10px; margin-top: 2px; margin-left: -2px;"></span>
+        </div>
+
+        <!-- Vertical Divider -->
+        <div class="vr me-3" style="opacity: 0.15; height: 40px; border-left: 1px solid #ced4da;"></div>
+
+        <!-- User Avatar Image -->
+        <div class="toast-user-avatar me-3">
+            <img class="rounded toast-avatar-img" src="" alt="avatar" width="40" height="40" style="object-fit: cover; display: none;" />
+            <div class="toast-avatar-placeholder rounded bg-light d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                <i class="fa-solid fa-user text-muted" style="font-size: 1.1rem;"></i>
+            </div>
+        </div>
+
+        <!-- Text details -->
+        <div class="toast-text-content flex-grow-1" style="min-width: 0;">
+            <h6 class="toast-title mb-0" style="font-size: 0.875rem; font-weight: 600; color: #1d2125; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{#title}}{{{title}}}{{/title}}
+                {{^title}}Notificação{{/title}}
+            </h6>
+            <div class="toast-message text-muted" style="font-size: 0.775rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{#subtitle}}{{{subtitle}}}{{/subtitle}}
+                {{^subtitle}}{{{message}}}{{/subtitle}}
+            </div>
+        </div>
+
+        <!-- Close Button -->
+        {{#closeButton}}
+        <button type="button" class="btn-close ms-2 align-self-start" data-bs-dismiss="toast" aria-label="{{#str}}dismissnotification, core{{/str}}"></button>
+        {{/closeButton}}
+    </div>
+</div>
+{{#js}}
+require(['theme_boost/bootstrap/toast', 'jquery'], function(Toast, $) {
+    const toastTrigger = document.getElementById('toast-{{uniqid}}');
+    const toast = $(toastTrigger);
+    
+    // Set icon class dynamically based on toast class
+    let iconClass = 'fa-bell text-muted';
+    if (toast.hasClass('toast-success')) {
+        iconClass = 'fa-circle-check text-success';
+    } else if (toast.hasClass('toast-danger')) {
+        iconClass = 'fa-circle-xmark text-danger';
+    } else if (toast.hasClass('toast-warning')) {
+        iconClass = 'fa-triangle-exclamation text-warning';
+    } else if (toast.hasClass('toast-info')) {
+        iconClass = 'fa-circle-info text-info';
+    }
+    toast.find('.toast-alert-icon i').addClass(iconClass);
+
+    // Dynamically grab user picture from navbar menu
+    try {
+        const userImg = $('.usermenu .userpicture, .navbar .userpicture').first();
+        if (userImg.length && userImg.attr('src')) {
+            toast.find('.toast-avatar-img').attr('src', userImg.attr('src')).show();
+            toast.find('.toast-avatar-placeholder').hide();
+        }
+    } catch (e) {
+        // Safe fallback
+    }
+
+    // Show the toast
+    new Toast(toastTrigger).show();
+
+    // Remove the toast from the DOM when hidden
+    toastTrigger.addEventListener('hidden.bs.toast', function() {
+        toastTrigger.remove();
+    });
+});
+{{/js}}

@@ -1,0 +1,159 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/login_layout
+
+    Custom split-screen login layout with a top header, middle split column, and bottom footer.
+}}
+<div id="page-content" class="vh-100 d-flex flex-column overflow-hidden w-100 m-0" style="background-color: #ffffff;">
+    <!-- Top Header -->
+    <header class="d-flex align-items-center justify-content-between px-4 py-2 bg-white border-bottom" style="height: 75px; min-height: 75px;">
+        <div class="d-flex align-items-center">
+            <img src="{{config.wwwroot}}/cdc_logo.png" alt="CDC Logo" style="max-height: 55px; width: auto; object-fit: contain;">
+        </div>
+        <div class="d-none d-md-block text-muted" style="font-size: 0.95rem; font-style: italic; font-weight: 500; color: #495057 !important;">
+            “A melhor forma de prever o futuro é construí-lo.”
+        </div>
+        <div>
+            {{#cansignup}}
+                <a href="{{signupurl}}" class="btn btn-outline-primary header-signup-btn px-4" style="border-radius: 0.5rem; font-weight: 600;">Matricule-se</a>
+            {{/cansignup}}
+        </div>
+    </header>
+
+    <!-- Main Container (Split Screen) -->
+    <div class="row g-0 flex-grow-1 overflow-hidden" style="height: calc(100vh - 150px);">
+        <!-- Left Column: Carousel (Hidden on Mobile) -->
+        <aside class="col-lg-6 d-none d-lg-block p-0 h-100 overflow-hidden" style="border-right: 1px solid #ced4da;">
+            <div id="loginCarousel" class="carousel slide h-100 w-100" data-bs-ride="carousel" data-bs-interval="4000">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner h-100">
+                    <div class="carousel-item active h-100">
+                        <div class="d-block w-100 h-100" style="background-image: url('{{config.wwwroot}}/carousel_1.png'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #ffffff;"></div>
+                        <div class="carousel-caption" style="background: rgba(255, 114, 13, 0.75); border-radius: 0.75rem; padding: 1rem 1.5rem; bottom: 2rem; text-shadow: none; left: 10%; right: 10%;">
+                            <h4 style="font-weight: 700; color: #fff; margin-bottom: 0.25rem; font-size: 1.25rem;">Conhecimento que transforma vidas</h4>
+                            <p style="font-size: 0.875rem; margin-bottom: 0; color: #fff;">Acesse cursos de capacitação e construa novas oportunidades com o CDC.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item h-100">
+                        <div class="d-block w-100 h-100" style="background-image: url('{{config.wwwroot}}/carousel_2.png'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #ffffff;"></div>
+                        <div class="carousel-caption" style="background: rgba(255, 114, 13, 0.75); border-radius: 0.75rem; padding: 1rem 1.5rem; bottom: 2rem; text-shadow: none; left: 10%; right: 10%;">
+                            <h4 style="font-weight: 700; color: #fff; margin-bottom: 0.25rem; font-size: 1.25rem;">Capacitação Profissional</h4>
+                            <p style="font-size: 0.875rem; margin-bottom: 0; color: #fff;">Cursos práticos pensados para expandir suas habilidades profissionais.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item h-100">
+                        <div class="d-block w-100 h-100" style="background-image: url('{{config.wwwroot}}/carousel_3.png'); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: #ffffff;"></div>
+                        <div class="carousel-caption" style="background: rgba(255, 114, 13, 0.75); border-radius: 0.75rem; padding: 1rem 1.5rem; bottom: 2rem; text-shadow: none; left: 10%; right: 10%;">
+                            <h4 style="font-weight: 700; color: #fff; margin-bottom: 0.25rem; font-size: 1.25rem;">União e Cidadania</h4>
+                            <p style="font-size: 0.875rem; margin-bottom: 0; color: #fff;">Colaboração, desenvolvimento comunitário e novos caminhos de aprendizado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Column: Login Card -->
+        <div id="region-main" class="col-12 col-lg-6 h-100 overflow-hidden d-flex align-items-center justify-content-center p-3">
+            <div class="card authincation-content col-11 p-0 border shadow-lg" style="max-width: 480px; max-height: 96vh; display: flex; flex-direction: column; border-radius: 0.75rem; background-color: #fff; border: 1px solid #ced4da !important; overflow: hidden;">
+                <div class="auth-form p-3 px-4 w-100 d-flex flex-column h-100 justify-content-between overflow-y-auto" style="max-height: 96vh;">
+                    <div>
+                        <div class="text-center mb-1">
+                            <img src="{{config.wwwroot}}/cdc_logo.png" alt="CDC Logo" style="max-height: 95px; width: auto; object-fit: contain;">
+                        </div>
+                        
+                        <div class="login-container">
+                            {{{ output.main_content }}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Footer -->
+    <footer class="d-flex flex-column flex-md-row align-items-center justify-content-between px-4 py-2 border-top" style="height: 75px; min-height: 75px; background-color: #F6A02A !important; color: #ffffff !important; font-size: 0.775rem; line-height: 1.35; border-top: 1px solid #F6A02A !important;">
+        <div class="text-center text-md-left mb-1 mb-md-0">
+            <h6 class="mb-0" style="font-weight: 700; font-size: 0.825rem; color: #ffffff !important;">Centro de Desenvolvimento e Cidadania - CDC</h6>
+            <p class="mb-0" style="font-size: 0.725rem; color: rgba(255, 255, 255, 0.9) !important;">CNPJ 03.970.166/0001-29 | Horário: 8h às 17h</p>
+        </div>
+        <div class="text-center mb-1 mb-md-0 d-none d-lg-block" style="font-size: 0.8rem; color: #ffffff !important;">
+            <p class="mb-0" style="color: #ffffff !important;">Rua Bispo Cardoso Ayres, 440 - Soledade, Recife - PE</p>
+            <p class="mb-0" style="color: #ffffff !important;">Telefone: (81) 3224-6963</p>
+        </div>
+        <div class="d-flex justify-content-center gap-3 login-socials-footer">
+            <a href="https://www.instagram.com/cdc_osc/" target="_blank" class="mx-1 text-light" title="Instagram"><i class="fa-brands fa-instagram fa-lg"></i></a>
+            <a href="https://www.facebook.com/centrodesenvolvimentocidadania/" target="_blank" class="mx-1 text-light" title="Facebook"><i class="fa-brands fa-facebook fa-lg"></i></a>
+            <a href="https://www.linkedin.com/company/centro-de-desenvolvimento-e-cidadania/" target="_blank" class="mx-1 text-light" title="LinkedIn"><i class="fa-brands fa-linkedin fa-lg"></i></a>
+            <a href="https://www.youtube.com/@cdc_osc" target="_blank" class="mx-1 text-light" title="YouTube"><i class="fa-brands fa-youtube fa-lg"></i></a>
+            <a href="https://www.cdc.org.br/" target="_blank" class="mx-1 text-light" title="Website"><i class="fa-solid fa-globe fa-lg"></i></a>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Inline login button layout logic
+    document.addEventListener("DOMContentLoaded", function() {
+        const moveButton = function() {
+            const passwordGroup = document.querySelector('.login-form-password');
+            const submitGroup = document.querySelector('.login-form-submit');
+            if (passwordGroup && submitGroup) {
+                const loginBtn = submitGroup.querySelector('button');
+                const passwordTarget = passwordGroup.querySelector('.position-relative') || passwordGroup.querySelector('input');
+                const forgotLink = passwordGroup.parentNode.querySelector('.text-end');
+                
+                if (loginBtn && passwordTarget) {
+                    loginBtn.innerHTML = 'Entrar';
+                    loginBtn.classList.remove('w-100');
+                    loginBtn.style.height = 'calc(1.5em + 1rem + 2px)';
+                    
+                    const row = document.createElement('div');
+                    row.className = 'row g-3 align-items-center mt-1';
+                    
+                    const colInput = document.createElement('div');
+                    colInput.className = 'col-8';
+                    
+                    const colBtn = document.createElement('div');
+                    colBtn.className = 'col-4';
+                    
+                    passwordTarget.parentNode.insertBefore(row, passwordTarget);
+                    colInput.appendChild(passwordTarget);
+                    colBtn.appendChild(loginBtn);
+                    row.appendChild(colInput);
+                    row.appendChild(colBtn);
+                    
+                    if (forgotLink) {
+                        forgotLink.classList.remove('text-end');
+                        forgotLink.classList.add('text-start');
+                        forgotLink.style.marginTop = '0.5rem';
+                        forgotLink.style.marginBottom = '0.5rem';
+                        row.parentNode.insertBefore(forgotLink, row.nextSibling);
+                    }
+                    
+                    submitGroup.style.display = 'none';
+                }
+            }
+        };
+        moveButton();
+        // Fallback check if rendering is slightly delayed
+        setTimeout(moveButton, 300);
+    });
+</script>
