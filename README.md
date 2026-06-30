@@ -81,6 +81,12 @@ docker exec cdc-moodle php /var/www/html/admin/cli/purge_caches.php
 
 ---
 
-## 📄 Licença
+## 📄 Licença e Propriedade Intelectual
 
-Este plugin é distribuído sob os termos da licença **GNU General Public License v3** (GPLv3) ou posterior. Veja o arquivo oficial para mais detalhes.
+### 🔒 Direitos Reservados e Propriedade do CDC
+Este tema é uma tecnologia desenvolvida e customizada sob medida para o **Centro de Desenvolvimento de Conteúdo (CDC)**. A identidade visual, os logotipos corporativos, o design de interface e os ativos de marca associados a este tema são de propriedade intelectual exclusiva do CDC. 
+
+Qualquer reprodução, distribuição, modificação secundária ou uso deste tema por terceiros requer consentimento e autorização formal por escrito. Para solicitações de licenciamento, parcerias ou autorizações de uso, entre em contato diretamente com o CDC.
+
+### ⚖️ Licença de Código (Moodle GPLv3)
+Por ser uma extensão derivada da plataforma Moodle (software livre), a lógica do código-fonte deste plugin é distribuída em conformidade com a licença **GNU General Public License v3** (GPLv3).
