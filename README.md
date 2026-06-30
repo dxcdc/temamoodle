@@ -1,42 +1,63 @@
 # CDC Moodle Theme (`theme_cdc_moodle`)
 
-Este é o tema oficial customizado e otimizado para a plataforma Moodle 5+, baseado no design moderno e premium do Uena Admin Template. O tema foi desenvolvido como um tema filho do **Boost** (tema padrão do Moodle), mantendo total compatibilidade com todas as funções nativas e adicionando recursos avançados de customização e acessibilidade.
+[![Moodle Version](https://img.shields.io/badge/Moodle-5.0%20%7C%204.4%2B-orange.svg?style=flat-square)](https://moodle.org)
+[![PHP Compatibility](https://img.shields.io/badge/PHP-8.3%20%7C%208.2-blue.svg?style=flat-square)](https://php.net)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-lightgrey.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![Release](https://img.shields.io/badge/Release-v1.0.0--stable-green.svg?style=flat-square)](https://github.com/dxcdc/temamoodle/releases)
+
+O **CDC Moodle Theme** é um tema filho do *theme_boost* desenvolvido sob medida para a plataforma Moodle 5+, inspirado no design moderno e sofisticado do *Uena Admin Template*. Ele combina a robustez e estabilidade do núcleo Boost com componentes de UI refinados e recursos dedicados à melhoria da experiência de aprendizagem e acessibilidade.
 
 ---
 
-## ✨ Principais Recursos
+## 🌟 Funcionalidades e Diferenciais
 
-- **Aparência Premium:** Sombras neutras escuras, bordas suaves de cartões e tipografia otimizada.
-- **Modo Escuro Nativo:** Suporte completo para modo escuro com detecção automática e controle manual.
-- **Presets de Cores Rápidos:** Alternador de esquemas de cores pré-configurados (Laranja CDC, Azul Oceano, Verde Floresta).
-- **Largura de Container Customizável:** Seleção de layout entre `Wide` (Tela Cheia), `Boxed` (1200px) e `Wide Boxed` (1500px).
-- **Painel de Acessibilidade:** Ajuste fino de tamanho de fonte, fontes especiais para dislexia e alto contraste.
-- **Página de Login Customizada:** Layout moderno com campos alinhados de forma consistente, suporte a carrossel de imagens e fundo personalizado.
-
----
-
-## 🛠️ Como Instalar no Moodle
-
-Para instalar este tema no seu servidor Moodle:
-
-1. Acesse o terminal do seu servidor Moodle e navegue até a pasta de temas:
-   ```bash
-   cd /caminho-do-moodle/theme/
-   ```
-2. Clone este repositório criando a pasta `cdc_moodle`:
-   ```bash
-   git clone https://github.com/dxcdc/temamoodle.git cdc_moodle
-   ```
-3. Acesse o painel de administração do Moodle (`Administração do site > Aparência > Seletor de temas`) e ative o tema **CDC Moodle**.
+* **Aparência Premium & Clean:** Sombras neutras otimizadas, bordas arredondadas e layouts limpos para reduzir o cansaço visual.
+* **Acessibilidade Nativa (WCAG):**
+  - Controle dinâmico de escala de fonte.
+  - Alternador para fonte especial **OpenDyslexic**.
+  - Modo escuro integrado de alto contraste.
+* **Largura de Container Ajustável:** Escolha rápida entre `Wide` (tela cheia para visualização de mídias), `Boxed` (1200px para leitura confortável) e `Wide Boxed` (1500px).
+* **Presets de Cores Rápidos:** Alternador de marca integrado com esquemas de cores pré-definidos (Laranja CDC, Azul Oceano, Verde Floresta).
+* **Login customizado:** Tela de login totalmente personalizada com carrossel dinâmico de destaques e alinhamento responsivo para o botão de visualização de senha.
 
 ---
 
-## 💻 Desenvolvimento e Depuração
+## 📋 Requisitos de Sistema
 
-Se você precisar depurar ou atualizar o código SCSS/CSS do tema no ambiente Docker:
+* **Moodle:** 4.4.x ou 5.0.x (ou superior)
+* **Tema Pai:** `theme_boost` (deve estar instalado e habilitado)
+* **PHP:** 8.2 ou 8.3 (compilado com suporte a `gd` e `intl`)
 
-### 1. Testar Compilação do SCSS
-O compilador de SCSS do Moodle falha silenciosamente em caso de erros de sintaxe. Para forçar a exibição dos erros reais de compilação, execute o seguinte comando:
+---
+
+## 🚀 Instalação e Ativação
+
+### 1. Clonar o Repositório
+Acesse o diretório raiz da sua instalação Moodle e navegue até a pasta de temas:
+```bash
+cd /var/www/html/theme/
+```
+
+Clone este repositório criando a pasta correspondente ao componente (`cdc_moodle`):
+```bash
+git clone https://github.com/dxcdc/temamoodle.git cdc_moodle
+```
+
+### 2. Ativar o Tema
+1. Faça login na sua plataforma Moodle como Administrador.
+2. Acesse: `Administração do site > Aparência > Seletor de temas`.
+3. Localize o dispositivo correspondente (Padrão/Default) e clique em **Alterar tema**.
+4. Selecione o tema **CDC Moodle** e clique em **Salvar mudanças**.
+
+---
+
+## 🛠️ Guia do Desenvolvedor (CLI & Docker)
+
+Caso precise realizar manutenções locais ou estender o tema dentro do ambiente de contêineres Docker da CDC:
+
+### Compilação e Validação do SCSS
+O compilador de SCSS do Moodle reverte silenciosamente para o Bootstrap padrão em caso de exceções no código compilado. Para depurar e validar seu código SCSS com exibição de erros no terminal, utilize o script CLI abaixo:
+
 ```bash
 docker exec cdc-moodle php -r "
   define('CLI_SCRIPT', true); require('/var/www/html/config.php');
@@ -52,8 +73,14 @@ docker exec cdc-moodle php -r "
 "
 ```
 
-### 2. Limpar Caches do Moodle
-Após qualquer modificação nos arquivos do tema, limpe os caches para forçar a atualização dos assets minificados:
+### Limpeza de Cache de Assets
+Para forçar a atualização imediata dos scripts JavaScript (AMD) e estilos CSS compilados, execute:
 ```bash
 docker exec cdc-moodle php /var/www/html/admin/cli/purge_caches.php
 ```
+
+---
+
+## 📄 Licença
+
+Este plugin é distribuído sob os termos da licença **GNU General Public License v3** (GPLv3) ou posterior. Veja o arquivo oficial para mais detalhes.
