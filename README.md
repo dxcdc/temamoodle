@@ -141,12 +141,18 @@ require_once(__DIR__ . "/lib/setup.php");' > /var/www/html/config.php
 
 RUN chown -R www-data:www-data /var/www/html
 
+# Ajustar configurações recomendadas do PHP para o Moodle não travar
+RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/conf.d/moodle.ini \
+    && echo "memory_limit = \${PHP_MEMORY_LIMIT:-512M}" >> /usr/local/etc/php/conf.d/moodle.ini \
+    && echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/moodle.ini \
+    && echo "post_max_size = 100M" >> /usr/local/etc/php/conf.d/moodle.ini
+
 # Configurar diretório público e expor variáveis no Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-RUN echo "PassEnv MOODLE_DB_HOST MOODLE_DB_NAME MOODLE_DB_USER MOODLE_DB_PASS MOODLE_WWWROOT" > /etc/apache2/conf-available/expose-env.conf \
+RUN echo "PassEnv MOODLE_DB_HOST MOODLE_DB_NAME MOODLE_DB_USER MOODLE_DB_PASS MOODLE_WWWROOT PHP_MEMORY_LIMIT" > /etc/apache2/conf-available/expose-env.conf \
     && a2enconf expose-env
 
 EXPOSE 80
@@ -157,6 +163,7 @@ CMD ["apache2-foreground"]
 Na aba **Environment** da sua aplicação no Easypanel, defina:
 * `MOODLE_DB_PASS`: Senha gerada no banco de dados MariaDB.
 * `MOODLE_WWWROOT`: Endereço web completo do site (ex: `https://educa.cdc.org.br`).
+* `PHP_MEMORY_LIMIT`: Limite de alocação de memória do PHP (padrão recomendado: `512M`).
 
 ### 3. Regra Crítica de Volumes (Evite Sobrescrever o Código)
 * **`/var/www/moodledata`**: Deve ser montado como volume persistente (necessário para armazenar uploads dos alunos).
