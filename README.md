@@ -81,6 +81,95 @@ docker exec cdc-moodle php /var/www/html/admin/cli/purge_caches.php
 
 ---
 
+---
+
+## 🐳 Implantação Automatizada em Produção (Docker / Easypanel)
+
+Este repositório foi projetado para permitir implantação 100% automatizada (Infrastructure as Code) usando Docker e painéis como o **Easypanel**. O Moodle é configurado dinamicamente no boot usando variáveis de ambiente.
+
+### 1. Dockerfile Recomendado
+Utilize o `Dockerfile` abaixo no seu serviço de aplicação do Easypanel. Ele compila o PHP 8.3, instala o Composer, baixa as dependências, clona o tema do GitHub e gera o `config.php` dinâmico:
+
+```dockerfile
+FROM php:8.3-apache
+LABEL maintainer="CDC"
+
+# Instalar bibliotecas essenciais e Git
+RUN apt-get update && apt-get install -y \
+    libpng-dev libjpeg-dev libxml2-dev libzip-dev libicu-dev \
+    mariadb-client git curl unzip && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Instalar extensões do PHP
+RUN docker-php-ext-configure gd --with-jpeg \
+    && docker-php-ext-install gd intl mysqli zip soap opcache exif
+
+# Baixar Moodle, Tema CDC e instalar dependências do Composer
+RUN rm -rf /var/www/html/* \
+    && git clone --depth 1 --branch MOODLE_502_STABLE https://github.com/moodle/moodle.git /var/www/html \
+    && git clone --depth 1 https://github.com/dxcdc/temamoodle.git /var/www/html/theme/cdc_moodle \
+    && cd /var/www/html \
+    && composer install --no-dev --classmap-authoritative
+
+# Criar config.php dinâmico baseado em variáveis de ambiente
+RUN echo '<?php \n\
+unset($CFG); \n\
+global $CFG; \n\
+$CFG = new stdClass(); \n\
+$CFG->dbtype    = "mariadb"; \n\
+$CFG->dblibrary = "native"; \n\
+$CFG->dbhost    = getenv("MOODLE_DB_HOST") ?: "moodle-db"; \n\
+$CFG->dbname    = getenv("MOODLE_DB_NAME") ?: "moodle_db"; \n\
+$CFG->dbuser    = getenv("MOODLE_DB_USER") ?: "mariadb"; \n\
+$CFG->dbpass    = getenv("MOODLE_DB_PASS") ?: ""; \n\
+$CFG->prefix    = "mdl_"; \n\
+$CFG->dboptions = array ( \n\
+  "dbpersist" => 0, \n\
+  "dbport" => 3306, \n\
+  "dbsocket" => "", \n\
+  "dbcollation" => "utf8mb4_unicode_ci", \n\
+); \n\
+$CFG->wwwroot   = getenv("MOODLE_WWWROOT") ?: "https://educa.cdc.org.br"; \n\
+$CFG->dataroot  = "/var/www/moodledata"; \n\
+$CFG->admin     = "admin"; \n\
+$CFG->directorypermissions = 0777; \n\
+$CFG->sslproxy  = true; \n\
+$CFG->theme     = "cdc_moodle"; \n\
+require_once(__DIR__ . "/lib/setup.php");' > /var/www/html/config.php
+
+RUN chown -R www-data:www-data /var/www/html
+
+# Configurar diretório público e expor variáveis no Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+RUN echo "PassEnv MOODLE_DB_HOST MOODLE_DB_NAME MOODLE_DB_USER MOODLE_DB_PASS MOODLE_WWWROOT" > /etc/apache2/conf-available/expose-env.conf \
+    && a2enconf expose-env
+
+EXPOSE 80
+CMD ["apache2-foreground"]
+```
+
+### 2. Variáveis de Ambiente Necessárias (App Moodle)
+Na aba **Environment** da sua aplicação no Easypanel, defina:
+* `MOODLE_DB_PASS`: Senha gerada no banco de dados MariaDB.
+* `MOODLE_WWWROOT`: Endereço web completo do site (ex: `https://educa.cdc.org.br`).
+
+### 3. Regra Crítica de Volumes (Evite Sobrescrever o Código)
+* **`/var/www/moodledata`**: Deve ser montado como volume persistente (necessário para armazenar uploads dos alunos).
+* **`/var/www/html`**: **NÃO deve ser montado como volume!** Se montado, o Docker ignorará os deploys e ocultará o tema e as dependências do Composer.
+
+### 4. Ajuste de Codificação do MariaDB
+Ao criar o banco de dados MariaDB, execute este comando no terminal da VPS para definir a codificação UTF-8 exigida pelo Moodle 5:
+```bash
+docker exec -i <CONTAINER_ID_DO_BANCO> mariadb -u mariadb -p<SENHA_DO_BANCO> -e "ALTER DATABASE moodle_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+---
+
 ## 📄 Licença e Propriedade Intelectual
 
 ### 🔒 Direitos Reservados e Propriedade do CDC
