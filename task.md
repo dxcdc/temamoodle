@@ -34,6 +34,7 @@
   - `[x]` Adicionar estilos SCSS globais de acessibilidade em `lib.php` (escala de fonte, grayscale, alto contraste).
   - `[x]` Injetar o markup do widget flutuante em `footer.mustache`.
   - `[x]` Testar e depurar a responsividade, persistência no localStorage e botão Reset.
+  - `[x]` Integrar widget oficial do VLibras para acessibilidade de tradução em Libras.
 - `[x]` 9. Customização de Aparência (Painel de Estilo)
   - `[x]` Atualizar estilos globais em `lib.php` para usar Variáveis CSS para cores primárias, fontes de leitura e cabeçalho.
   - `[x]` Atualizar `accessibility.js` (AMD) para ler/salvar estilos no localStorage e mudar variáveis dinamicamente.
