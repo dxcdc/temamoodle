@@ -39,3 +39,32 @@
   - `[x]` Atualizar `accessibility.js` (AMD) para ler/salvar estilos no localStorage e mudar variáveis dinamicamente.
   - `[x]` Atualizar `footer.mustache` com a aba "Personalizar Aparência" e seus botões/seletores.
   - `[x]` Testar toda a persistência de aparência e compatibilidade de alto contraste.
+
+---
+
+## 📋 Tarefas Pendentes de Infraestrutura (Pós-Instalação)
+
+- `[ ]` **1. Configurar o Cron Job do Moodle na VPS**
+  - **Por que:** Vital para o Moodle enviar e-mails de cadastro, notificações de fóruns, processar notas e limpar arquivos temporários.
+  - **Como fazer:**
+    1. Acesse o terminal da sua VPS via SSH.
+    2. Abra o agendador de tarefas do sistema operacional rodando: `crontab -e`.
+    3. Cole a seguinte linha no final do arquivo:
+       ```text
+       * * * * * docker exec $(docker ps -qf name=moodle | head -n1) php /var/www/html/admin/cli/cron.php >/dev/null 2>&1
+       ```
+    4. Salve e feche o arquivo.
+
+- `[ ]` **2. Configurar o Envio de E-mails de Saída (SMTP)**
+  - **Por que:** Evita que os e-mails enviados pelo Moodle caiam na caixa de spam dos alunos ou sejam bloqueados.
+  - **Como fazer:**
+    1. Faça login como administrador no Moodle.
+    2. Vá em `Administração do site > Servidor > E-mail > Configurações de envio de e-mail`.
+    3. Insira as credenciais do seu servidor SMTP corporativo ou serviço dedicado (como SendGrid, Mailgun, Amazon SES).
+
+- `[ ]` **3. Validar Limite de Memória no Easypanel**
+  - **Por que:** Garante estabilidade quando múltiplos alunos estiverem acessando cursos simultaneamente.
+  - **Como fazer:**
+    1. Vá no painel do Easypanel > Moodle > aba Environment.
+    2. Garanta que a variável `PHP_MEMORY_LIMIT` está configurada como `512M`.
+
