@@ -106,10 +106,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install gd intl mysqli zip soap opcache exif
 
-# Baixar Moodle, Tema CDC e instalar dependências do Composer
+# Baixar Moodle, Tema CDC, Plugin Custom Certificate e instalar dependências do Composer
 RUN rm -rf /var/www/html/* \
     && git clone --depth 1 --branch MOODLE_502_STABLE https://github.com/moodle/moodle.git /var/www/html \
     && git clone --depth 1 https://github.com/dxcdc/temamoodle.git /var/www/html/theme/cdc_moodle \
+    && git clone --depth 1 --branch MOODLE_502_STABLE https://github.com/markn86/moodle-mod_customcert.git /var/www/html/mod/customcert \
     && cd /var/www/html \
     && composer install --no-dev --classmap-authoritative
 
