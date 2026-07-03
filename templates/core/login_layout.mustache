@@ -213,43 +213,52 @@
                     const btnGroup = document.createElement('div');
                     btnGroup.className = 'btn-group mt-2 mb-2 d-inline-flex';
                     btnGroup.setAttribute('role', 'group');
+                    btnGroup.style.gap = '10px'; // Spacing between the buttons
                     
                     const btnNo = document.createElement('button');
                     btnNo.type = 'button';
                     btnNo.className = 'btn btn-sm px-4';
-                    btnNo.innerHTML = 'Não';
-                    btnNo.style.borderTopLeftRadius = '0.5rem';
-                    btnNo.style.borderBottomLeftRadius = '0.5rem';
-                    btnNo.style.borderTopRightRadius = '0';
-                    btnNo.style.borderBottomRightRadius = '0';
-                    btnNo.style.fontWeight = '600';
-                    btnNo.style.border = '1px solid #ced4da';
+                    btnNo.innerHTML = 'NÃO CONCORDO';
+                    btnNo.style.borderRadius = '0.5rem'; // Individual rounded corners
+                    btnNo.style.fontWeight = '700';
+                    btnNo.style.textTransform = 'uppercase';
+                    btnNo.style.padding = '0.6rem 1.5rem';
+                    btnNo.style.fontSize = '0.8rem';
+                    btnNo.style.border = '1px solid #f72b50';
                     btnNo.style.transition = 'all 0.2s';
                     
                     const btnYes = document.createElement('button');
                     btnYes.type = 'button';
                     btnYes.className = 'btn btn-sm px-4';
-                    btnYes.innerHTML = 'Sim';
-                    btnYes.style.borderTopRightRadius = '0.5rem';
-                    btnYes.style.borderBottomRightRadius = '0.5rem';
-                    btnYes.style.borderTopLeftRadius = '0';
-                    btnYes.style.borderBottomLeftRadius = '0';
-                    btnYes.style.fontWeight = '600';
-                    btnYes.style.border = '1px solid #F6A02A';
+                    btnYes.innerHTML = 'SIM, CONCORDO';
+                    btnYes.style.borderRadius = '0.5rem'; // Individual rounded corners
+                    btnYes.style.fontWeight = '700';
+                    btnYes.style.textTransform = 'uppercase';
+                    btnYes.style.padding = '0.6rem 1.5rem';
+                    btnYes.style.fontSize = '0.8rem';
+                    btnYes.style.border = '1px solid #3A82EF';
                     btnYes.style.transition = 'all 0.2s';
                     
                     const activeYesStyle = function() {
-                        btnYes.style.backgroundColor = '#F6A02A';
+                        // Yes Active (Blue background, white text)
+                        btnYes.style.backgroundColor = '#3A82EF';
                         btnYes.style.color = '#ffffff';
-                        btnNo.style.backgroundColor = '#f8f9fa';
-                        btnNo.style.color = '#6c757d';
+                        
+                        // No Inactive (Outline red)
+                        btnNo.style.backgroundColor = 'transparent';
+                        btnNo.style.color = '#f72b50';
+                        btnNo.style.borderColor = '#f72b50';
                     };
                     
                     const activeNoStyle = function() {
-                        btnNo.style.backgroundColor = '#6c757d';
+                        // No Active (Red background, white text)
+                        btnNo.style.backgroundColor = '#f72b50';
                         btnNo.style.color = '#ffffff';
-                        btnYes.style.backgroundColor = '#f8f9fa';
-                        btnYes.style.color = '#F6A02A';
+                        
+                        // Yes Inactive (Outline blue)
+                        btnYes.style.backgroundColor = 'transparent';
+                        btnYes.style.color = '#3A82EF';
+                        btnYes.style.borderColor = '#3A82EF';
                     };
                     
                     if (checkbox.checked) {
