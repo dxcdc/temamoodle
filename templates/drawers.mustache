@@ -181,6 +181,183 @@
     {{{ output.standard_after_main_region_html }}}
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Move the guest alert banner to bottom if present
+        const moveButton = function() {
+            const row = document.querySelector('.sitepolicyconfirm') || document.querySelector('.policiesagreement') || document.querySelector('.tool_policy_agreement') || document.querySelector('.policiesagreement-consent');
+            if (row) {
+                const footer = document.getElementById('page-footer') || document.body;
+                if (footer && !footer.contains(row)) {
+                    footer.appendChild(row);
+                }
+            }
+        };
+        moveButton();
+        setTimeout(moveButton, 300);
+
+        // Transform optional checkboxes into Sim/Não button groups
+        const transformOptionalPolicies = function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="agree"], input[type="checkbox"][name^="policyagreements"]');
+            
+            checkboxes.forEach(function(checkbox) {
+                try {
+                    if (checkbox.dataset.transformed) return;
+                    
+                    const parent = checkbox.closest('.form-check') || checkbox.parentNode;
+                    if (!parent) return;
+                    
+                    // Determine if it is compulsory using safe checks
+                    const hasRequiredAttr = checkbox.hasAttribute('required');
+                    const hasRequiredClass = parent.classList && parent.classList.contains('required');
+                    const hasDangerText = parent.querySelector && parent.querySelector('.text-danger');
+                    const hasReqStar = parent.innerHTML && (parent.innerHTML.includes('req-star') || parent.innerHTML.includes('req'));
+                    const isSingleCheckboxWithError = document.querySelector('.alert-danger') && document.querySelectorAll('input[type="checkbox"]').length === 1;
+                    
+                    const isCompulsoryField = hasRequiredAttr || hasRequiredClass || hasDangerText || hasReqStar || isSingleCheckboxWithError;
+                    
+                    if (!isCompulsoryField) {
+                        checkbox.dataset.transformed = "true";
+                        checkbox.style.display = 'none'; // Hide the original checkbox
+                        
+                        const btnGroup = document.createElement('div');
+                        btnGroup.className = 'btn-group mt-2 mb-2 d-inline-flex';
+                        btnGroup.setAttribute('role', 'group');
+                        btnGroup.style.gap = '10px'; // Spacing between the buttons
+                        
+                        const btnNo = document.createElement('button');
+                        btnNo.type = 'button';
+                        btnNo.className = 'btn btn-sm px-4';
+                        btnNo.innerHTML = 'NÃO CONCORDO';
+                        btnNo.style.borderRadius = '0.5rem'; // Individual rounded corners
+                        btnNo.style.fontWeight = '700';
+                        btnNo.style.textTransform = 'uppercase';
+                        btnNo.style.padding = '0.6rem 1.5rem';
+                        btnNo.style.fontSize = '0.8rem';
+                        btnNo.style.border = '1px solid #f72b50';
+                        btnNo.style.transition = 'all 0.2s';
+                        
+                        const btnYes = document.createElement('button');
+                        btnYes.type = 'button';
+                        btnYes.className = 'btn btn-sm px-4';
+                        btnYes.innerHTML = 'SIM, CONCORDO';
+                        btnYes.style.borderRadius = '0.5rem'; // Individual rounded corners
+                        btnYes.style.fontWeight = '700';
+                        btnYes.style.textTransform = 'uppercase';
+                        btnYes.style.padding = '0.6rem 1.5rem';
+                        btnYes.style.fontSize = '0.8rem';
+                        btnYes.style.border = '1px solid #3A82EF';
+                        btnYes.style.transition = 'all 0.2s';
+                        
+                        const activeYesStyle = function() {
+                            // Yes Active (Blue background, white text)
+                            btnYes.style.backgroundColor = '#3A82EF';
+                            btnYes.style.color = '#ffffff';
+                            
+                            // No Inactive (Outline red)
+                            btnNo.style.backgroundColor = 'transparent';
+                            btnNo.style.color = '#f72b50';
+                            btnNo.style.borderColor = '#f72b50';
+                        };
+                        
+                        const activeNoStyle = function() {
+                            // No Active (Red background, white text)
+                            btnNo.style.backgroundColor = '#f72b50';
+                            btnNo.style.color = '#ffffff';
+                            
+                            // Yes Inactive (Outline blue)
+                            btnYes.style.backgroundColor = 'transparent';
+                            btnYes.style.color = '#3A82EF';
+                            btnYes.style.borderColor = '#3A82EF';
+                        };
+                        
+                        if (checkbox.checked) {
+                            activeYesStyle();
+                        } else {
+                            activeNoStyle();
+                        }
+                        
+                        btnYes.addEventListener('click', function() {
+                            checkbox.checked = true;
+                            checkbox.dispatchEvent(new Event('change'));
+                            activeYesStyle();
+                        });
+                        
+                        btnNo.addEventListener('click', function() {
+                            checkbox.checked = false;
+                            checkbox.dispatchEvent(new Event('change'));
+                            activeNoStyle();
+                        });
+                        
+                        parent.appendChild(btnGroup);
+                        btnGroup.appendChild(btnNo);
+                        btnGroup.appendChild(btnYes);
+                    }
+                } catch (e) {
+                    console.error("Error transforming checkbox: ", e);
+                }
+            });
+        };
+        transformOptionalPolicies();
+
+        // Make policy wizard buttons uppercase on client-side
+        const uppercasePolicyButtons = function() {
+            const buttons = document.querySelectorAll('.path-admin-tool-policy button, .path-admin-tool-policy input[type="submit"], .path-admin-tool-policy .policiesagreement a, .path-admin-tool-policy a.btn');
+            buttons.forEach(function(btn) {
+                if (btn.tagName === 'INPUT') {
+                    btn.value = btn.value.toUpperCase();
+                } else if (btn.childNodes.length === 1 && btn.childNodes[0].nodeType === Node.TEXT_NODE) {
+                    btn.textContent = btn.textContent.toUpperCase();
+                }
+            });
+        };
+        uppercasePolicyButtons();
+        setTimeout(uppercasePolicyButtons, 400);
+
+        setTimeout(transformOptionalPolicies, 450);
+        setTimeout(transformOptionalPolicies, 900); // multiple checks for slow page loads
+
+        // Add custom VOLTAR (Back) button on policy wizard
+        const addPolicyBackButton = function() {
+            if (!window.location.href.includes('policy/')) return;
+            
+            const submitBtn = document.querySelector('.path-admin-tool-policy input[type="submit"]') || 
+                              document.querySelector('.path-admin-tool-policy button[type="submit"]');
+                              
+            if (submitBtn) {
+                const btnContainer = submitBtn.parentNode;
+                if (btnContainer && !document.getElementById('custom-policy-back-btn')) {
+                    const btnBack = document.createElement('button');
+                    btnBack.type = 'button';
+                    btnBack.id = 'custom-policy-back-btn';
+                    btnBack.className = 'btn btn-sm px-4 me-2';
+                    btnBack.innerHTML = 'VOLTAR';
+                    btnBack.style.borderRadius = '0.75rem';
+                    btnBack.style.fontWeight = '700';
+                    btnBack.style.textTransform = 'uppercase';
+                    btnBack.style.padding = '0.6rem 2.5rem';
+                    btnBack.style.fontSize = '0.9rem';
+                    btnBack.style.border = '1px solid #ced4da';
+                    btnBack.style.backgroundColor = '#f8f9fa';
+                    btnBack.style.color = '#495057';
+                    btnBack.style.marginRight = '10px';
+                    btnBack.style.transition = 'all 0.2s';
+                    
+                    btnBack.addEventListener('click', function() {
+                        window.history.back();
+                    });
+                    
+                    // Insert directly before the submit button for maximum compatibility
+                    btnContainer.insertBefore(btnBack, submitBtn);
+                }
+            }
+        };
+        addPolicyBackButton();
+        setTimeout(addPolicyBackButton, 300);
+        setTimeout(addPolicyBackButton, 800);
+    });
+</script>
+
 </body>
 </html>
 {{#js}}

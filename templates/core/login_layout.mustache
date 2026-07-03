@@ -331,7 +331,7 @@
 
         // Add custom VOLTAR (Back) button on policy wizard
         const addPolicyBackButton = function() {
-            if (!window.location.href.includes('policy/view.php')) return;
+            if (!window.location.href.includes('policy/')) return;
             
             const submitBtn = document.querySelector('.path-admin-tool-policy input[type="submit"]') || 
                               document.querySelector('.path-admin-tool-policy button[type="submit"]');
