@@ -393,6 +393,107 @@ function theme_cdc_moodle_get_main_scss_content($theme) {
             color: #1d2125 !important;
         }
         
+        /* Registration Page (Signup) UX Overrides */
+        .path-login-signup .authincation-content {
+            max-width: 680px !important; /* Make card wider on desktop for registration fields */
+        }
+        .path-login-signup .mform {
+            width: 100% !important;
+        }
+        .path-login-signup .mform legend {
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #2d3748 !important;
+            border-bottom: 2px solid rgba(246, 160, 42, 0.1) !important;
+            padding-bottom: 0.5rem !important;
+            margin-bottom: 1.5rem !important;
+            width: 100% !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+        }
+        .path-login-signup .form-control {
+            border-radius: 0.75rem !important;
+            padding: 0.6rem 1rem !important;
+            border: 1px solid #ced4da !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .path-login-signup .form-control:focus {
+            border-color: #F6A02A !important;
+            box-shadow: 0 0 0 3px rgba(246, 160, 42, 0.15) !important;
+        }
+        .path-login-signup .col-form-label {
+            font-weight: 600 !important;
+            color: #495057 !important;
+            font-size: 0.9rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .path-login-signup .req {
+            color: #f72b50 !important;
+            font-weight: bold !important;
+        }
+        .path-login-signup .form-buttons, 
+        .path-login-signup .fitem_fsubmit {
+            margin-top: 1.5rem !important;
+            border-top: 1px solid #e9ecef !important;
+            padding-top: 1.5rem !important;
+            display: flex !important;
+            justify-content: flex-end !important;
+            gap: 10px !important;
+        }
+        .path-login-signup #id_submitbutton {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            border-radius: 0.75rem !important;
+            padding: 0.6rem 2rem !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .path-login-signup #id_submitbutton:hover {
+            background-color: #db891b !important;
+            border-color: #db891b !important;
+        }
+        .path-login-signup #id_cancel {
+            border-radius: 0.75rem !important;
+            padding: 0.6rem 2rem !important;
+            font-weight: 600 !important;
+            background-color: #f8f9fa !important;
+            border-color: #ced4da !important;
+            color: #495057 !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .path-login-signup #id_cancel:hover {
+            background-color: #e2e6ea !important;
+            color: #212529 !important;
+        }
+        /* Custom styles for tool_policy checkboxes */
+        .path-login-signup .form-check {
+            padding-left: 1.75rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+        .path-login-signup .form-check-input {
+            width: 1.15rem !important;
+            height: 1.15rem !important;
+            margin-left: -1.75rem !important;
+            border-radius: 0.25rem !important;
+            border-color: #ced4da !important;
+            cursor: pointer !important;
+        }
+        .path-login-signup .form-check-input:checked {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+        }
+        .path-login-signup .form-check-label {
+            font-size: 0.875rem !important;
+            color: #495057 !important;
+            cursor: pointer !important;
+        }
+        .path-login-signup .form-check-label a {
+            color: #F6A02A !important;
+            font-weight: 600 !important;
+            text-decoration: underline !important;
+        }
+        
         /* Uena Premium Alert & Modal Entrance Animations */
         @keyframes alertFadeIn {
             from {
