@@ -355,6 +355,91 @@
         addPolicyBackButton();
         setTimeout(addPolicyBackButton, 300);
         setTimeout(addPolicyBackButton, 800);
+
+        // Transform consent dropdown to side-by-side buttons
+        const transformCustomConsentDropdown = function() {
+            const selectEl = document.querySelector('select[name="profile_field_consentimento_contato"]') || 
+                             document.querySelector('select[id*="consentimento_contato"]');
+                             
+            if (!selectEl || selectEl.dataset.transformed) return;
+            
+            // Hide the native select
+            selectEl.style.display = 'none';
+            selectEl.dataset.transformed = "true";
+            
+            // Create the button wrapper
+            const btnWrapper = document.createElement('div');
+            btnWrapper.className = 'custom-consent-btn-wrapper mt-2 d-flex';
+            btnWrapper.style.gap = '15px';
+            btnWrapper.style.display = 'flex';
+            
+            const btnNo = document.createElement('button');
+            btnNo.type = 'button';
+            btnNo.className = 'btn btn-outline-danger font-weight-bold px-4 py-2';
+            btnNo.innerHTML = 'NÃO CONCORDO';
+            btnNo.style.borderRadius = '0.5rem';
+            btnNo.style.borderWidth = '2px';
+            btnNo.style.color = '#f72b50';
+            btnNo.style.borderColor = '#f72b50';
+            btnNo.style.transition = 'all 0.2s';
+            btnNo.style.fontSize = '0.9rem';
+            btnNo.style.fontWeight = '700';
+            
+            const btnYes = document.createElement('button');
+            btnYes.type = 'button';
+            btnYes.className = 'btn btn-outline-primary font-weight-bold px-4 py-2';
+            btnYes.innerHTML = 'SIM, CONCORDO';
+            btnYes.style.borderRadius = '0.5rem';
+            btnYes.style.borderWidth = '2px';
+            btnYes.style.color = '#3A82EF';
+            btnYes.style.borderColor = '#3A82EF';
+            btnYes.style.transition = 'all 0.2s';
+            btnYes.style.fontSize = '0.9rem';
+            btnYes.style.fontWeight = '700';
+            
+            const updateButtonStates = function() {
+                const val = selectEl.selectedIndex;
+                if (val === 1) { // Index 1 is No
+                    btnNo.style.backgroundColor = '#f72b50';
+                    btnNo.style.color = '#ffffff';
+                    btnYes.style.backgroundColor = 'transparent';
+                    btnYes.style.color = '#3A82EF';
+                } else if (val === 2) { // Index 2 is Yes
+                    btnYes.style.backgroundColor = '#3A82EF';
+                    btnYes.style.color = '#ffffff';
+                    btnNo.style.backgroundColor = 'transparent';
+                    btnNo.style.color = '#f72b50';
+                } else {
+                    btnNo.style.backgroundColor = 'transparent';
+                    btnNo.style.color = '#f72b50';
+                    btnYes.style.backgroundColor = 'transparent';
+                    btnYes.style.color = '#3A82EF';
+                }
+            };
+            
+            btnNo.addEventListener('click', function() {
+                selectEl.selectedIndex = 1;
+                selectEl.dispatchEvent(new Event('change'));
+                updateButtonStates();
+            });
+            
+            btnYes.addEventListener('click', function() {
+                selectEl.selectedIndex = 2;
+                selectEl.dispatchEvent(new Event('change'));
+                updateButtonStates();
+            });
+            
+            // Insert wrapper after the select element
+            selectEl.parentNode.insertBefore(btnWrapper, selectEl.nextSibling);
+            btnWrapper.appendChild(btnNo);
+            btnWrapper.appendChild(btnYes);
+            
+            // Initialize state
+            updateButtonStates();
+        };
+        transformCustomConsentDropdown();
+        setTimeout(transformCustomConsentDropdown, 300);
+        setTimeout(transformCustomConsentDropdown, 800);
     });
 </script>
 
