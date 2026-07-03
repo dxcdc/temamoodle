@@ -41,6 +41,14 @@ Este documento descreve o processo de migração, limpeza de infraestrutura anti
 * **Causa:** As imagens eram referenciadas a partir do caminho absoluto da raiz do site (`config.wwwroot`), mas o Apache aponta apenas para o diretório `/public`, impossibilitando o acesso direto às imagens locais do tema.
 * **Resolução:** Atualização dos caminhos no arquivo `login_layout.mustache` e `navbar.mustache` para utilizar o servidor de imagens interno do Moodle (`theme/image.php/cdc_moodle/...`), permitindo ao Moodle servir as imagens dinamicamente da pasta `pix/`.
 
+### Incidente F: Limitação do Moodle para Termos Opcionais e Fluxo de Cadastro
+* **Sintoma:** O Moodle esconde termos opcionais do assistente de login e os divide em telas separadas, criando atrito na jornada do aluno que precisava "logar novamente" para ver os termos.
+* **Causa:** Arquitetura do plugin `tool_policy` que força separação e só valida termos opcionais após o registro inicial.
+* **Resolução:**
+  1. Sobrescrevemos os templates do Moodle para exibir os contratos obrigatórios em caixas roláveis com aceite duplo (Confirmação de leitura + Rádio-botões SIM/NÃO coloridos).
+  2. Adicionamos suporte no tema para converter campos de perfil personalizados (como o dropdown de consentimento do WhatsApp) em botões interativos `NÃO CONCORDO` (vermelho) e `SIM, CONCORDO` (azul) na tela de cadastro, integrando à validação de campo obrigatório.
+  3. Injetamos uma barra progressiva de 2 etapas (Escolher Consentimentos ➡️ Preencher Cadastro) no topo de todo o fluxo de registro.
+
 ---
 
 ## 3. Lições Aprendidas e Recomendações de Longo Prazo
@@ -49,6 +57,7 @@ Este documento descreve o processo de migração, limpeza de infraestrutura anti
 2. **Depuração Silenciosa de SCSS:** O Moodle oculta erros de SCSS. Sempre valide o SCSS utilizando o script de compilação por CLI presente na documentação para evitar regressões visuais silenciosas.
 3. **Multi-Linguagem em Temas Customizados:** Sempre forneça arquivos de idioma correspondentes ao idioma de uso do site (como `lang/pt_br/`) para plugins customizados, evitando bugs de exibição de nomes técnicos (como `[[pluginname]]`).
 4. **Isolamento de Variáveis do Banco:** Não armazene senhas no Dockerfile ou código-fonte. O uso de `PassEnv` combinado com as variáveis do Easypanel provou ser a forma mais segura e flexível de gerenciar credenciais em produção.
+5. **Uso Inteligente de Campos de Perfil para Consentimentos:** Para termos opcionais (marketing, WhatsApp) que não devem travar o login do aluno, o uso de campos de perfil personalizados combinados com conversão visual via Javascript é infinitamente superior e mais limpo do que hacks no plugin de políticas padrão.
 
 ---
 

@@ -46,3 +46,17 @@ Como este Moodle é compilado do zero, existem fatores externos que podem quebra
 * **Erro 'rootdirpublic' ou 'Forbidden':** O Moodle 5 exige que a pasta web seja a `/public`. O nosso Dockerfile já faz essa injeção no Apache, mas se você tentar acessar e der erro, verifique se não há contêineres antigos rodando na mesma porta.
 * **Erro de Conexão com o Banco (using password: NO):** Verifique se a variável de ambiente `MOODLE_DB_PASS` foi salva corretamente na aba *Environment* do App do Moodle no Easypanel (e não no MariaDB) e se você clicou em **Deploy** após salvar.
 * **Tela Branca de Permissão:** Verifique se as permissões da pasta `/var/www/moodledata` estão aplicadas como `www-data` no Dockerfile. O Moodle se recusa a iniciar se não tiver acesso de gravação.
+
+---
+
+## 7. Configuração do Cron em Produção (Docker)
+Para que rotinas em segundo plano (envio de e-mails de confirmação, relatórios de conclusão, backups) funcionem, o Cron do Moodle deve ser executado a cada 1 minuto.
+* **Atenção:** Deve rodar sob o usuário `www-data` do Apache para evitar colisões de permissão de escrita de arquivos na pasta `/moodledata`.
+* **Configuração na VPS (Host):**
+  1. No host da VPS, abra o crontab (`crontab -e`).
+  2. Adicione a seguinte linha no final do arquivo:
+     ```text
+     * * * * * docker exec -u www-data cdc-moodle php /var/www/html/admin/cli/cron.php >/dev/null 2>&1
+     ```
+  3. Salve e saia. O próprio Linux da VPS se encarregará de chamar o PHP dentro do container a cada 1 minuto de forma transparente.
+

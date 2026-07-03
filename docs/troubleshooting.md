@@ -102,3 +102,31 @@ Este documento detalha os principais desafios técnicos enfrentados durante o de
       border-radius: 50% !important;
   }
   ```
+
+---
+
+## 7. Múltipla Escolha Customizada para Políticas (Consentimento LGPD/Contato)
+* **O Problema:** O Moodle serve por padrão checkboxes para termos obrigatórios e rádio-botões comuns para termos opcionais. A equipe desejava uma UI mais viva, onde o usuário escolhesse entre "NÃO CONCORDO" (em vermelho) e "SIM, CONCORDO" (em azul) através de botões interativos, além de ler os contratos em caixas roláveis (`terms-box`) de `250px`.
+* **A Solução:** 
+  1. Sobrescrevemos os templates nativos do `tool_policy` (`page_viewdoc.mustache` e `page_agreedocs.mustache`) no tema.
+  2. Implementamos um script assíncrono (AJAX) que lê o link de visualização do contrato completo e injeta o texto na caixa rolável de forma inline.
+  3. Transformamos os inputs em botões estilizados, controlando as cores via CSS e a lógica de envio através de rádio-botões com valores `0` (Não) e `1` (Sim) que alimentam perfeitamente o validador nativo de backend do Moodle.
+
+---
+
+## 8. Campos de Perfil Personalizados no Cadastro (Dropdown para Botões)
+* **O Problema:** O Moodle só exibe termos obrigatórios no bloqueio de login (wizard). Termos opcionais (como o de WhatsApp) são ignorados. Uma alternativa é criar um campo de perfil personalizado do tipo "Menu de escolha" no cadastro, mas o Moodle o renderiza como um menu suspenso (dropdown) comum e pré-seleciona a primeira opção, inviabilizando o aceite ativo e limpo.
+* **A Solução:**
+  1. No painel do Moodle, adicione uma opção em branco ou instrutiva na primeira linha do campo (Ex: `"Escolha uma opção..."`, `"Não concordo"`, `"Sim concordo"`) e marque o campo como **Obrigatório**.
+  2. No tema (`login_layout.mustache` e `drawers.mustache`), injetamos um script JS que localiza o campo pelo nome `consentimento_contato`, oculta o select nativo e renderiza dois botões de outline (`NÃO CONCORDO` em vermelho e `SIM, CONCORDO` em azul).
+  3. Ao clicar em um dos botões, o JS atualiza o index do select oculto e dispara o evento de alteração (`change`). Se o aluno tentar cadastrar sem selecionar, o Moodle bloqueia o envio exibindo o erro em vermelho nativo por estar com a opção padrão (vazia).
+
+---
+
+## 9. Wizard de Cadastro Progressivo em 2 Etapas
+* **O Problema:** Dividir o cadastro em termos e preenchimento de dados pode confundir o aluno, parecendo que ele precisa reiniciar o fluxo de login ao ser redirecionado de uma página para outra.
+* **A Solução:** Criamos uma barra progressiva visual unificada (Wizard / Breadcrumbs) injetada nos cabeçalhos dos templates:
+  * **Etapa 1 (Escolher Consentimentos):** Ativa na página de termos (`view.php?status=1`).
+  * **Etapa 2 (Preencher Cadastro):** Ativa com a Etapa 1 marcada com um check de concluído (✔) na página de cadastro (`signup.php`).
+  Isso guia o aluno de forma suave pelas 2 únicas fases do registro.
+
