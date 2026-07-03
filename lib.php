@@ -1044,6 +1044,84 @@ function theme_cdc_moodle_get_main_scss_content($theme) {
             font-size: 0.85rem !important;
             margin-bottom: 1rem !important;
         }
+        
+        /* Sequential Policy Acceptance Page (view.php) Premium Styling */
+        .path-admin-tool-policy .policy-document,
+        .path-admin-tool-policy .policy-content,
+        .path-admin-tool-policy .policy-text,
+        .path-admin-tool-policy .policy-body {
+            max-height: 380px !important;
+            overflow-y: auto !important;
+            border: 1px solid #e2e8f0 !important;
+            padding: 1.5rem !important;
+            border-radius: 0.75rem !important;
+            background-color: #f8f9fa !important;
+            margin-bottom: 1.5rem !important;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+        .path-admin-tool-policy h3, 
+        .path-admin-tool-policy h2 {
+            color: #F6A02A !important;
+            font-weight: 700 !important;
+            font-size: 1.4rem !important;
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+        .path-admin-tool-policy button, 
+        .path-admin-tool-policy input[type="submit"],
+        .path-admin-tool-policy .btn-primary,
+        .path-admin-tool-policy #id_submitbutton,
+        .path-admin-tool-policy a.btn-primary,
+        .path-admin-tool-policy .policy-buttons button,
+        .path-admin-tool-policy a[href*="policy/agree.php"] {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important; /* Avoid lowercase! */
+            letter-spacing: 0.5px !important;
+            border-radius: 0.75rem !important;
+            padding: 0.6rem 2.5rem !important;
+            font-size: 0.9rem !important;
+            transition: all 0.2s ease-in-out !important;
+            box-shadow: 0 4px 6px -1px rgba(246, 160, 42, 0.2) !important;
+        }
+        .path-admin-tool-policy button:hover, 
+        .path-admin-tool-policy input[type="submit"]:hover,
+        .path-admin-tool-policy .btn-primary:hover,
+        .path-admin-tool-policy a.btn-primary:hover {
+            background-color: #db891b !important;
+            border-color: #db891b !important;
+            color: #ffffff !important;
+        }
+        /* Site policy consent banner styles */
+        .sitepolicyconfirm,
+        .policiesagreement,
+        .tool_policy_agreement,
+        .moodle-policy-consent-banner {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            border: 1px solid #334155 !important;
+            padding: 1.25rem 2rem !important;
+            border-radius: 0.75rem !important;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2) !important;
+        }
+        .policiesagreement a,
+        .sitepolicyconfirm a,
+        .tool_policy_agreement a,
+        .path-admin-tool-policy #page-footer a,
+        .path-admin-tool-policy .sitepolicy a {
+            background-color: #F6A02A !important;
+            color: #ffffff !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 0.5rem !important;
+            text-transform: uppercase !important;
+            font-weight: 700 !important;
+            display: inline-block !important;
+            margin-top: 5px !important;
+            text-decoration: none !important;
+            box-shadow: 0 2px 4px rgba(246, 160, 42, 0.2) !important;
+        }
     ';
 
     // Import Uena SCSS Component Files

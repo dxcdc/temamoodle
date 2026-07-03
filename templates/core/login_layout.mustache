@@ -277,6 +277,39 @@
             });
         };
         transformOptionalPolicies();
+        // Hide the default Moodle "Notificação" section on signup page
+        const hideDefaultNotificationSection = function() {
+            if (!window.location.href.includes('signup.php')) return;
+            
+            const legends = document.querySelectorAll('legend, h4, h5');
+            legends.forEach(function(legend) {
+                const text = legend.textContent.trim().toLowerCase();
+                if (text === 'notificação' || text === 'notificações' || text.includes('notifica')) {
+                    const fieldset = legend.closest('fieldset') || legend.closest('.fcontainer') || legend.parentNode;
+                    if (fieldset) {
+                        fieldset.style.display = 'none';
+                    }
+                }
+            });
+        };
+        hideDefaultNotificationSection();
+        setTimeout(hideDefaultNotificationSection, 300);
+        setTimeout(hideDefaultNotificationSection, 800);
+
+        // Make policy wizard buttons uppercase on client-side
+        const uppercasePolicyButtons = function() {
+            const buttons = document.querySelectorAll('.path-admin-tool-policy button, .path-admin-tool-policy input[type="submit"], .path-admin-tool-policy .policiesagreement a, .path-admin-tool-policy a.btn');
+            buttons.forEach(function(btn) {
+                if (btn.tagName === 'INPUT') {
+                    btn.value = btn.value.toUpperCase();
+                } else if (btn.childNodes.length === 1 && btn.childNodes[0].nodeType === Node.TEXT_NODE) {
+                    btn.textContent = btn.textContent.toUpperCase();
+                }
+            });
+        };
+        uppercasePolicyButtons();
+        setTimeout(uppercasePolicyButtons, 400);
+
         setTimeout(transformOptionalPolicies, 450);
         setTimeout(transformOptionalPolicies, 900); // multiple checks for slow page loads
     });
