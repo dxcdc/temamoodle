@@ -111,4 +111,42 @@
 require(['tool_policy/policyactions'], function(ActionsMod) {
     ActionsMod.init('[data-action="view"]');
 });
+
+// Asynchronously fetch and inject the full policy text into the scrollbox
+(function() {
+    const loadFullPolicyTexts = function() {
+        const termsBoxes = document.querySelectorAll('.terms-box');
+        termsBoxes.forEach(function(box) {
+            if (box.dataset.loaded) return;
+            
+            const link = box.querySelector('a[href*="view.php"]');
+            if (link) {
+                const url = link.getAttribute('href');
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        // Extract Moodle's native full policy content container
+                        const fullContent = doc.querySelector('.policy_document_content') || 
+                                            doc.querySelector('.policy-document') || 
+                                            doc.querySelector('.policy-content') ||
+                                            doc.querySelector('.policy_document');
+                        
+                        if (fullContent) {
+                            const contentDiv = box.querySelector('.terms-content');
+                            if (contentDiv) {
+                                contentDiv.innerHTML = fullContent.innerHTML;
+                                box.dataset.loaded = "true";
+                            }
+                        }
+                    })
+                    .catch(err => console.error("Error fetching full policy content: ", err));
+            }
+        });
+    };
+    loadFullPolicyTexts();
+    setTimeout(loadFullPolicyTexts, 400);
+    setTimeout(loadFullPolicyTexts, 1200);
+})();
 {{/js}}
