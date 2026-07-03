@@ -194,98 +194,105 @@
             const checkboxes = document.querySelectorAll('input[type="checkbox"][name="agree"], input[type="checkbox"][name^="policyagreements"]');
             
             checkboxes.forEach(function(checkbox) {
-                if (checkbox.dataset.transformed) return;
-                
-                const parent = checkbox.closest('.form-check') || checkbox.parentNode;
-                
-                // Determine if it is compulsory
-                const isCompulsoryField = checkbox.hasAttribute('required') || 
-                                          parent.classList.contains('required') ||
-                                          parent.querySelector('.text-danger') || 
-                                          parent.innerHTML.includes('req-star') ||
-                                          // check if page has warning message and this is the only checkbox
-                                          (document.querySelector('.alert-danger') && document.querySelectorAll('input[type="checkbox"]').length === 1);
-                
-                if (!isCompulsoryField) {
-                    checkbox.dataset.transformed = "true";
-                    checkbox.style.display = 'none'; // Hide the original checkbox
+                try {
+                    if (checkbox.dataset.transformed) return;
                     
-                    const btnGroup = document.createElement('div');
-                    btnGroup.className = 'btn-group mt-2 mb-2 d-inline-flex';
-                    btnGroup.setAttribute('role', 'group');
-                    btnGroup.style.gap = '10px'; // Spacing between the buttons
+                    const parent = checkbox.closest('.form-check') || checkbox.parentNode;
+                    if (!parent) return;
                     
-                    const btnNo = document.createElement('button');
-                    btnNo.type = 'button';
-                    btnNo.className = 'btn btn-sm px-4';
-                    btnNo.innerHTML = 'NÃO CONCORDO';
-                    btnNo.style.borderRadius = '0.5rem'; // Individual rounded corners
-                    btnNo.style.fontWeight = '700';
-                    btnNo.style.textTransform = 'uppercase';
-                    btnNo.style.padding = '0.6rem 1.5rem';
-                    btnNo.style.fontSize = '0.8rem';
-                    btnNo.style.border = '1px solid #f72b50';
-                    btnNo.style.transition = 'all 0.2s';
+                    // Determine if it is compulsory using safe checks
+                    const hasRequiredAttr = checkbox.hasAttribute('required');
+                    const hasRequiredClass = parent.classList && parent.classList.contains('required');
+                    const hasDangerText = parent.querySelector && parent.querySelector('.text-danger');
+                    const hasReqStar = parent.innerHTML && (parent.innerHTML.includes('req-star') || parent.innerHTML.includes('req'));
+                    const isSingleCheckboxWithError = document.querySelector('.alert-danger') && document.querySelectorAll('input[type="checkbox"]').length === 1;
                     
-                    const btnYes = document.createElement('button');
-                    btnYes.type = 'button';
-                    btnYes.className = 'btn btn-sm px-4';
-                    btnYes.innerHTML = 'SIM, CONCORDO';
-                    btnYes.style.borderRadius = '0.5rem'; // Individual rounded corners
-                    btnYes.style.fontWeight = '700';
-                    btnYes.style.textTransform = 'uppercase';
-                    btnYes.style.padding = '0.6rem 1.5rem';
-                    btnYes.style.fontSize = '0.8rem';
-                    btnYes.style.border = '1px solid #3A82EF';
-                    btnYes.style.transition = 'all 0.2s';
+                    const isCompulsoryField = hasRequiredAttr || hasRequiredClass || hasDangerText || hasReqStar || isSingleCheckboxWithError;
                     
-                    const activeYesStyle = function() {
-                        // Yes Active (Blue background, white text)
-                        btnYes.style.backgroundColor = '#3A82EF';
-                        btnYes.style.color = '#ffffff';
+                    if (!isCompulsoryField) {
+                        checkbox.dataset.transformed = "true";
+                        checkbox.style.display = 'none'; // Hide the original checkbox
                         
-                        // No Inactive (Outline red)
-                        btnNo.style.backgroundColor = 'transparent';
-                        btnNo.style.color = '#f72b50';
-                        btnNo.style.borderColor = '#f72b50';
-                    };
-                    
-                    const activeNoStyle = function() {
-                        // No Active (Red background, white text)
-                        btnNo.style.backgroundColor = '#f72b50';
-                        btnNo.style.color = '#ffffff';
+                        const btnGroup = document.createElement('div');
+                        btnGroup.className = 'btn-group mt-2 mb-2 d-inline-flex';
+                        btnGroup.setAttribute('role', 'group');
+                        btnGroup.style.gap = '10px'; // Spacing between the buttons
                         
-                        // Yes Inactive (Outline blue)
-                        btnYes.style.backgroundColor = 'transparent';
-                        btnYes.style.color = '#3A82EF';
-                        btnYes.style.borderColor = '#3A82EF';
-                    };
-                    
-                    if (checkbox.checked) {
-                        activeYesStyle();
-                    } else {
-                        activeNoStyle();
+                        const btnNo = document.createElement('button');
+                        btnNo.type = 'button';
+                        btnNo.className = 'btn btn-sm px-4';
+                        btnNo.innerHTML = 'NÃO CONCORDO';
+                        btnNo.style.borderRadius = '0.5rem'; // Individual rounded corners
+                        btnNo.style.fontWeight = '700';
+                        btnNo.style.textTransform = 'uppercase';
+                        btnNo.style.padding = '0.6rem 1.5rem';
+                        btnNo.style.fontSize = '0.8rem';
+                        btnNo.style.border = '1px solid #f72b50';
+                        btnNo.style.transition = 'all 0.2s';
+                        
+                        const btnYes = document.createElement('button');
+                        btnYes.type = 'button';
+                        btnYes.className = 'btn btn-sm px-4';
+                        btnYes.innerHTML = 'SIM, CONCORDO';
+                        btnYes.style.borderRadius = '0.5rem'; // Individual rounded corners
+                        btnYes.style.fontWeight = '700';
+                        btnYes.style.textTransform = 'uppercase';
+                        btnYes.style.padding = '0.6rem 1.5rem';
+                        btnYes.style.fontSize = '0.8rem';
+                        btnYes.style.border = '1px solid #3A82EF';
+                        btnYes.style.transition = 'all 0.2s';
+                        
+                        const activeYesStyle = function() {
+                            // Yes Active (Blue background, white text)
+                            btnYes.style.backgroundColor = '#3A82EF';
+                            btnYes.style.color = '#ffffff';
+                            
+                            // No Inactive (Outline red)
+                            btnNo.style.backgroundColor = 'transparent';
+                            btnNo.style.color = '#f72b50';
+                            btnNo.style.borderColor = '#f72b50';
+                        };
+                        
+                        const activeNoStyle = function() {
+                            // No Active (Red background, white text)
+                            btnNo.style.backgroundColor = '#f72b50';
+                            btnNo.style.color = '#ffffff';
+                            
+                            // Yes Inactive (Outline blue)
+                            btnYes.style.backgroundColor = 'transparent';
+                            btnYes.style.color = '#3A82EF';
+                            btnYes.style.borderColor = '#3A82EF';
+                        };
+                        
+                        if (checkbox.checked) {
+                            activeYesStyle();
+                        } else {
+                            activeNoStyle();
+                        }
+                        
+                        btnYes.addEventListener('click', function() {
+                            checkbox.checked = true;
+                            checkbox.dispatchEvent(new Event('change'));
+                            activeYesStyle();
+                        });
+                        
+                        btnNo.addEventListener('click', function() {
+                            checkbox.checked = false;
+                            checkbox.dispatchEvent(new Event('change'));
+                            activeNoStyle();
+                        });
+                        
+                        parent.appendChild(btnGroup);
+                        btnGroup.appendChild(btnNo);
+                        btnGroup.appendChild(btnYes);
                     }
-                    
-                    btnYes.addEventListener('click', function() {
-                        checkbox.checked = true;
-                        checkbox.dispatchEvent(new Event('change'));
-                        activeYesStyle();
-                    });
-                    
-                    btnNo.addEventListener('click', function() {
-                        checkbox.checked = false;
-                        checkbox.dispatchEvent(new Event('change'));
-                        activeNoStyle();
-                    });
-                    
-                    parent.appendChild(btnGroup);
-                    btnGroup.appendChild(btnNo);
-                    btnGroup.appendChild(btnYes);
+                } catch (e) {
+                    console.error("Error transforming checkbox: ", e);
                 }
             });
         };
         transformOptionalPolicies();
+        
         // Hide the default Moodle "Notificação" section on signup page
         const hideDefaultNotificationSection = function() {
             if (!window.location.href.includes('signup.php')) return;
