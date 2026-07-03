@@ -323,38 +323,27 @@
             if (submitBtn) {
                 const btnContainer = submitBtn.parentNode;
                 if (btnContainer && !document.getElementById('custom-policy-back-btn')) {
-                    // Check if we are past page 1 (Moodle displays "Política X de Y")
-                    const pageText = document.body.innerText;
-                    const isPastFirstPage = pageText.includes(' 2 de ') || 
-                                            pageText.includes(' 3 de ') || 
-                                            pageText.includes('Política 2') || 
-                                            pageText.includes('Política 3') ||
-                                            window.location.search.includes('policyid=2') ||
-                                            window.location.search.includes('policyid=3');
+                    const btnBack = document.createElement('button');
+                    btnBack.type = 'button';
+                    btnBack.id = 'custom-policy-back-btn';
+                    btnBack.className = 'btn btn-sm px-4 me-2';
+                    btnBack.innerHTML = 'VOLTAR';
+                    btnBack.style.borderRadius = '0.75rem';
+                    btnBack.style.fontWeight = '700';
+                    btnBack.style.textTransform = 'uppercase';
+                    btnBack.style.padding = '0.6rem 2.5rem';
+                    btnBack.style.fontSize = '0.9rem';
+                    btnBack.style.border = '1px solid #ced4da';
+                    btnBack.style.backgroundColor = '#f8f9fa';
+                    btnBack.style.color = '#495057';
+                    btnBack.style.marginRight = '10px';
+                    btnBack.style.transition = 'all 0.2s';
                     
-                    if (isPastFirstPage) {
-                        const btnBack = document.createElement('button');
-                        btnBack.type = 'button';
-                        btnBack.id = 'custom-policy-back-btn';
-                        btnBack.className = 'btn btn-sm px-4 me-2';
-                        btnBack.innerHTML = 'VOLTAR';
-                        btnBack.style.borderRadius = '0.75rem';
-                        btnBack.style.fontWeight = '700';
-                        btnBack.style.textTransform = 'uppercase';
-                        btnBack.style.padding = '0.6rem 2.5rem';
-                        btnBack.style.fontSize = '0.9rem';
-                        btnBack.style.border = '1px solid #ced4da';
-                        btnBack.style.backgroundColor = '#f8f9fa';
-                        btnBack.style.color = '#495057';
-                        btnBack.style.marginRight = '10px';
-                        btnBack.style.transition = 'all 0.2s';
-                        
-                        btnBack.addEventListener('click', function() {
-                            window.history.back();
-                        });
-                        
-                        btnContainer.insertBefore(btnBack, btnContainer.firstChild);
-                    }
+                    btnBack.addEventListener('click', function() {
+                        window.history.back();
+                    });
+                    
+                    btnContainer.insertBefore(btnBack, btnContainer.firstChild);
                 }
             }
         };
