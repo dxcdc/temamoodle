@@ -352,7 +352,8 @@
                         window.history.back();
                     });
                     
-                    btnContainer.insertBefore(btnBack, btnContainer.firstChild);
+                    // Insert directly before the submit button for maximum compatibility
+                    btnContainer.insertBefore(btnBack, submitBtn);
                 }
             }
         };
