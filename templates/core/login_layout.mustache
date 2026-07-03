@@ -113,12 +113,13 @@
     // Inline login button layout logic
     document.addEventListener("DOMContentLoaded", function() {
         const moveButton = function() {
+            if (document.getElementById('moodle-login-links-row')) return;
+
             const passwordGroup = document.querySelector('.login-form-password');
             const submitGroup = document.querySelector('.login-form-submit');
             if (passwordGroup && submitGroup) {
                 const loginBtn = submitGroup.querySelector('button');
-                const passwordTarget = passwordGroup.querySelector('.position-relative') || passwordGroup.querySelector('input');
-                const forgotLink = passwordGroup.parentNode.querySelector('.text-end');
+                const passwordTarget = passwordGroup.querySelector('.toggle-sensitive-wrapper') || passwordGroup.querySelector('.position-relative') || passwordGroup.querySelector('input');
                 
                 if (loginBtn && passwordTarget) {
                     loginBtn.innerHTML = 'Entrar';
@@ -140,15 +141,47 @@
                     row.appendChild(colInput);
                     row.appendChild(colBtn);
                     
-                    if (forgotLink) {
-                        forgotLink.classList.remove('text-end');
-                        forgotLink.classList.add('text-start');
-                        forgotLink.style.marginTop = '0.5rem';
-                        forgotLink.style.marginBottom = '0.5rem';
-                        row.parentNode.insertBefore(forgotLink, row.nextSibling);
+                    submitGroup.style.display = 'none';
+
+                    // Consolidate links: Forgot Password and Signup
+                    const forgotLinkEl = document.querySelector('a[href*="forgot_password.php"]');
+                    const signupLinkEl = document.querySelector('a[href*="signup.php"]');
+                    
+                    let forgotUrl = '';
+                    let signupUrl = '';
+                    
+                    if (forgotLinkEl) {
+                        forgotUrl = forgotLinkEl.getAttribute('href');
+                        const oldForgot = forgotLinkEl.closest('.text-end') || forgotLinkEl.parentNode;
+                        if (oldForgot) oldForgot.style.display = 'none';
                     }
                     
-                    submitGroup.style.display = 'none';
+                    if (signupLinkEl) {
+                        signupUrl = signupLinkEl.getAttribute('href');
+                        const oldSignup = signupLinkEl.closest('.text-center') || signupLinkEl.parentNode;
+                        if (oldSignup) oldSignup.style.display = 'none';
+                    }
+                    
+                    if (forgotUrl || signupUrl) {
+                        const linksRow = document.createElement('div');
+                        linksRow.id = 'moodle-login-links-row';
+                        linksRow.className = 'text-center small mt-3';
+                        linksRow.style.width = '100%';
+                        
+                        let html = '';
+                        if (forgotUrl) {
+                            html += `<a href="${forgotUrl}" style="color: #F6A02A; font-weight: 600;">Esqueceu a senha?</a>`;
+                        }
+                        if (forgotUrl && signupUrl) {
+                            html += `<span class="mx-2 text-muted">|</span>`;
+                        }
+                        if (signupUrl) {
+                            html += `<a href="${signupUrl}" style="color: #F6A02A; font-weight: 600;">Criar conta</a>`;
+                        }
+                        
+                        linksRow.innerHTML = html;
+                        row.parentNode.insertBefore(linksRow, row.nextSibling);
+                    }
                 }
             }
         };
