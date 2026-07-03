@@ -188,6 +188,97 @@
         moveButton();
         // Fallback check if rendering is slightly delayed
         setTimeout(moveButton, 300);
+
+        // Transform optional checkboxes into Sim/Não button groups
+        const transformOptionalPolicies = function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="agree"], input[type="checkbox"][name^="policyagreements"]');
+            
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.dataset.transformed) return;
+                
+                const parent = checkbox.closest('.form-check') || checkbox.parentNode;
+                
+                // Determine if it is compulsory
+                const isCompulsoryField = checkbox.hasAttribute('required') || 
+                                          parent.classList.contains('required') ||
+                                          parent.querySelector('.text-danger') || 
+                                          parent.innerHTML.includes('req-star') ||
+                                          // check if page has warning message and this is the only checkbox
+                                          (document.querySelector('.alert-danger') && document.querySelectorAll('input[type="checkbox"]').length === 1);
+                
+                if (!isCompulsoryField) {
+                    checkbox.dataset.transformed = "true";
+                    checkbox.style.display = 'none'; // Hide the original checkbox
+                    
+                    const btnGroup = document.createElement('div');
+                    btnGroup.className = 'btn-group mt-2 mb-2 d-inline-flex';
+                    btnGroup.setAttribute('role', 'group');
+                    
+                    const btnNo = document.createElement('button');
+                    btnNo.type = 'button';
+                    btnNo.className = 'btn btn-sm px-4';
+                    btnNo.innerHTML = 'Não';
+                    btnNo.style.borderTopLeftRadius = '0.5rem';
+                    btnNo.style.borderBottomLeftRadius = '0.5rem';
+                    btnNo.style.borderTopRightRadius = '0';
+                    btnNo.style.borderBottomRightRadius = '0';
+                    btnNo.style.fontWeight = '600';
+                    btnNo.style.border = '1px solid #ced4da';
+                    btnNo.style.transition = 'all 0.2s';
+                    
+                    const btnYes = document.createElement('button');
+                    btnYes.type = 'button';
+                    btnYes.className = 'btn btn-sm px-4';
+                    btnYes.innerHTML = 'Sim';
+                    btnYes.style.borderTopRightRadius = '0.5rem';
+                    btnYes.style.borderBottomRightRadius = '0.5rem';
+                    btnYes.style.borderTopLeftRadius = '0';
+                    btnYes.style.borderBottomLeftRadius = '0';
+                    btnYes.style.fontWeight = '600';
+                    btnYes.style.border = '1px solid #F6A02A';
+                    btnYes.style.transition = 'all 0.2s';
+                    
+                    const activeYesStyle = function() {
+                        btnYes.style.backgroundColor = '#F6A02A';
+                        btnYes.style.color = '#ffffff';
+                        btnNo.style.backgroundColor = '#f8f9fa';
+                        btnNo.style.color = '#6c757d';
+                    };
+                    
+                    const activeNoStyle = function() {
+                        btnNo.style.backgroundColor = '#6c757d';
+                        btnNo.style.color = '#ffffff';
+                        btnYes.style.backgroundColor = '#f8f9fa';
+                        btnYes.style.color = '#F6A02A';
+                    };
+                    
+                    if (checkbox.checked) {
+                        activeYesStyle();
+                    } else {
+                        activeNoStyle();
+                    }
+                    
+                    btnYes.addEventListener('click', function() {
+                        checkbox.checked = true;
+                        checkbox.dispatchEvent(new Event('change'));
+                        activeYesStyle();
+                    });
+                    
+                    btnNo.addEventListener('click', function() {
+                        checkbox.checked = false;
+                        checkbox.dispatchEvent(new Event('change'));
+                        activeNoStyle();
+                    });
+                    
+                    parent.appendChild(btnGroup);
+                    btnGroup.appendChild(btnNo);
+                    btnGroup.appendChild(btnYes);
+                }
+            });
+        };
+        transformOptionalPolicies();
+        setTimeout(transformOptionalPolicies, 450);
+        setTimeout(transformOptionalPolicies, 900); // multiple checks for slow page loads
     });
 </script>
 
