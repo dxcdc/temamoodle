@@ -1098,19 +1098,50 @@ function theme_cdc_moodle_get_main_scss_content($theme) {
         .sitepolicyconfirm,
         .policiesagreement,
         .tool_policy_agreement,
-        .moodle-policy-consent-banner {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border: 1px solid #334155 !important;
-            padding: 1.25rem 2rem !important;
-            border-radius: 0.75rem !important;
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2) !important;
+        .moodle-policy-consent-banner,
+        .policiesagreement-consent {
+            background-color: #ffffff !important;
+            color: #1e293b !important;
+            border-top: 4px solid #F6A02A !important;
+            padding: 1.5rem 2rem !important;
+            box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+            font-size: 0.95rem !important;
+            font-weight: 500 !important;
+            line-height: 1.6 !important;
         }
         .policiesagreement a,
         .sitepolicyconfirm a,
-        .tool_policy_agreement a,
-        .path-admin-tool-policy #page-footer a,
-        .path-admin-tool-policy .sitepolicy a {
+        .tool_policy_agreement a {
+            color: #F6A02A !important;
+            font-weight: 700 !important;
+            text-decoration: underline !important;
+        }
+        .policiesagreement a[href*="agree.php"],
+        .sitepolicyconfirm a[href*="agree.php"],
+        .policiesagreement-consent a.btn,
+        .policiesagreement a.btn {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+            color: #ffffff !important;
+            padding: 0.6rem 2.5rem !important;
+            border-radius: 0.75rem !important;
+            text-transform: uppercase !important;
+            font-weight: 700 !important;
+            display: inline-block !important;
+            text-decoration: none !important;
+            margin-left: 15px !important;
+            box-shadow: 0 4px 6px -1px rgba(246, 160, 42, 0.2) !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .policiesagreement a[href*="agree.php"]:hover,
+        .sitepolicyconfirm a[href*="agree.php"]:hover {
+            background-color: #db891b !important;
+            border-color: #db891b !important;
+            color: #ffffff !important;
+        }
+        /* Style any generic links inside policy agreement that act as Continue buttons */
+        .policiesagreement .policy-agree-link,
+        .policiesagreement a:last-child {
             background-color: #F6A02A !important;
             color: #ffffff !important;
             padding: 0.5rem 1.5rem !important;
