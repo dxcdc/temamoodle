@@ -1250,6 +1250,75 @@ function theme_cdc_moodle_get_main_scss_content($theme) {
             color: #f72b50 !important;
             font-weight: 700;
         }
+
+        /* Progressive Registration Wizard Progress Bar */
+        .moodle-wizard-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            padding: 10px 0;
+        }
+        .wizard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            width: 100px;
+            text-align: center;
+        }
+        .wizard-step .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .wizard-step .step-label {
+            font-size: 0.725rem;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .wizard-connector {
+            flex-grow: 1;
+            height: 3px;
+            background-color: #cbd5e1;
+            margin-bottom: 22px; /* aligns with center of step-num */
+            transition: all 0.3s ease;
+        }
+        /* Active & Completed States */
+        .wizard-step.active .step-num {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 0 4px rgba(246, 160, 42, 0.15) !important;
+        }
+        .wizard-step.active .step-label {
+            color: #F6A02A !important;
+        }
+        .wizard-step.completed .step-num {
+            background-color: #F6A02A !important;
+            border-color: #F6A02A !important;
+            color: #ffffff !important;
+        }
+        .wizard-step.completed .step-label {
+            color: #F6A02A !important;
+        }
+        .wizard-connector.completed {
+            background-color: #F6A02A !important;
+        }
     ';
 
     // Import Uena SCSS Component Files
