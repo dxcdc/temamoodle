@@ -1153,6 +1153,103 @@ function theme_cdc_moodle_get_main_scss_content($theme) {
             text-decoration: none !important;
             box-shadow: 0 2px 4px rgba(246, 160, 42, 0.2) !important;
         }
+        
+        /* Custom Policy acceptance wizard layout styling */
+        .terms-container {
+            max-width: 800px;
+            margin: 0 auto;
+            color: #333;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .terms-title {
+            color: #F6A02A !important; /* Laranja institucional CDC */
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #F6A02A;
+            padding-bottom: 10px;
+        }
+        .terms-box {
+            height: 250px;
+            overflow-y: scroll;
+            border: 1px solid #ccd1d1;
+            background-color: #fcfcfc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .terms-box h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        .terms-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .terms-box::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        .terms-box::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 4px;
+        }
+        .terms-box::-webkit-scrollbar-thumb:hover {
+            background: #999; 
+        }
+        .agreement-section {
+            background-color: #f8f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #F6A02A;
+            margin-bottom: 25px;
+        }
+        .agreement-group {
+            margin-bottom: 20px;
+        }
+        .agreement-group:last-child {
+            margin-bottom: 0;
+        }
+        .agreement-label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .radio-options {
+            display: flex;
+            gap: 20px;
+        }
+        .radio-inline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .radio-inline input {
+            margin: 0;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .radio-yes input {
+            accent-color: #3A82EF !important; /* Blue accent color for accept */
+        }
+        .radio-no input {
+            accent-color: #f72b50 !important; /* Red accent color for decline */
+        }
+        .radio-yes span {
+            color: #3A82EF !important;
+            font-weight: 700;
+        }
+        .radio-no span {
+            color: #f72b50 !important;
+            font-weight: 700;
+        }
     ';
 
     // Import Uena SCSS Component Files

@@ -1,0 +1,96 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template tool_policy/page_agreedocs
+
+    Template for showing to the user the policy docs to agree (overridden for Uena theme).
+}}
+
+{{#messages}}{{{.}}}{{/messages}}
+
+<div class="terms-container">
+    <form id="agreedocsform" method="post" action="{{myurl}}">
+        <input type="hidden" name="sesskey" value="{{sesskey}}">
+
+        {{#behalfuser}}
+            <div class="clearfix mb-3">
+                <div class="alert alert-warning">
+                    {{# str }} viewconsentpageforuser, tool_policy, {{{ . }}} {{/ str }}
+                </div>
+            </div>
+        {{/behalfuser}}
+
+        <div class="clearfix mb-2">
+            <h2 class="terms-title">{{# str }}consentpagetitle, tool_policy{{/ str }}</h2>
+        </div>
+
+        <p class="text-muted mb-4"><em>Por favor, leia atentamente os contratos abaixo antes de realizar a sua opção.</em></p>
+
+        {{#policies}}
+            <input value="{{id}}" name="listdoc[]" type="hidden">
+
+            <!-- CAIXA DO CONTRATO COM ROLAGEM -->
+            <div class="terms-box">
+                <h4>{{{name}}}</h4>
+                <div class="terms-content">
+                    {{{summary}}}
+                </div>
+                <div class="agreedoc-msg mt-3 pt-2 border-top">
+                    {{# str }}refertofullpolicytext, tool_policy, {{{policymodal}}} {{/ str }}
+                </div>
+            </div>
+
+            <!-- SEÇÃO DE RESPOSTAS (MULTIPLA ESCOLA / RADIO BOTÕES) -->
+            <div class="agreement-section">
+                <div class="agreement-group">
+                    <span class="agreement-label">
+                        Você concorda com o(a) {{{name}}}?
+                        {{^optional}}
+                            <i class="icon fa fa-exclamation-circle text-danger fa-fw" title="{{# str }} required, core {{/ str }}" ></i>
+                            <span class="text-danger font-weight-bold" style="font-size: 0.8rem;">(Obrigatório)</span>
+                        {{/optional}}
+                    </span>
+                    
+                    <div class="radio-options mt-3">
+                        <label class="radio-inline radio-no d-flex align-items-center">
+                            <input type="radio" name="status{{id}}" value="0" {{#versiondeclined}}checked="{{.}}"{{/versiondeclined}} required>
+                            <span class="ml-2 font-weight-bold">NÃO CONCORDO</span>
+                        </label>
+                        <label class="radio-inline radio-yes d-flex align-items-center">
+                            <input type="radio" name="status{{id}}" value="1" {{#versionagreed}}checked="{{.}}"{{/versionagreed}} required>
+                            <span class="ml-2 font-weight-bold">SIM, CONCORDO</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        {{/policies}}
+
+        <div class="mt-4 pt-3 border-top d-flex justify-content-start">
+            <input type="submit" class="btn btn-primary px-5 py-2 text-uppercase font-weight-bold mr-2" name="submit" value="CONTINUAR">
+            {{#cancancel}}
+                <input type="submit" class="btn btn-secondary px-4 py-2 text-uppercase font-weight-bold" name="cancel" value="{{#cleanstr}} cancel {{/cleanstr}}">
+            {{/cancancel}}
+        </div>
+    </form>
+</div>
+
+{{#js}}
+// Initialise the JS for the modal window which displays the policy versions.
+require(['tool_policy/policyactions'], function(ActionsMod) {
+    ActionsMod.init('[data-action="view"]');
+});
+{{/js}}
