@@ -27,7 +27,32 @@ Por favor, leve em conta todas essas diretrizes em qualquer sugestão de código
 
 ---
 
-## 2. Receitas de Prompt para Casos de Suporte Comuns
+## 2. Prompt de Criação e Padronização de Documentação (Para Novos Projetos)
+Use este prompt em qualquer outro projeto de Moodle/Docker para instruir uma nova IA a gerar essa mesma estrutura documental espetacular:
+
+```text
+Atue como um Arquiteto de Soluções e Especialista em DevOps Sênior. Preciso estruturar a documentação de infraestrutura, backup e suporte deste projeto diretamente no meu diretório de trabalho local.
+
+Para mantermos a padronização no Git e entre os nossos projetos, crie uma pasta chamada docs/ na raiz do projeto e escreva nela os seguintes 7 arquivos de documentação técnica densa:
+
+1. estrategia_execução.md: Planejamento de repositórios Git (código do tema separado de infraestrutura), fluxo de branches (main, develop, hotfix) e homologação em laboratório local (staging) rodando em localhost:8080 com banco anônimo.
+2. migration_guide.md: Guia de SSH seguro (chaves ED25519 e atalho config), checklist de diagnóstico em modo leitura na VPS (ss, docker stats, df) e comandos de exportação compactada de banco (mysqldump | gzip) e download.
+3. ajuda_infra.md: Arquivo docker-compose.yml de referência (Apache+PHP 8.3 + MariaDB 11.4), topologia de rede isolada (db-network privada e interna) e arquivo .env.example parametrizado.
+4. postmortem.md: Cultura de retrospectiva sem busca de culpados (blameless) e template padrão de preenchimento de incidentes (Sintomas, Timeline, 5 Porquês e Ações Preventivas).
+5. troubleshooting.md: Soluções rápidas para permissões (chown/chmod www-data), charset de banco (utf8mb4_unicode_ci), depurador CLI de SCSS (para capturar erros silenciosos de compilação) e porta SMTP Postal (porta 25 com segurança marcada como "Nenhum" no Moodle para negociar STARTTLS).
+6. politica de BKP.md: Estratégia de backup 3-2-1, script Bash automatizado com dump de banco, compactação de diretórios, criptografia simétrica forte via GPG (com arquivo .gpg_passphrase externo), alertas de status para Webhook do Slack/Discord e roteiro de validação pós-restore.
+7. prompt de IA.md: Bloco de Contexto do Projeto (System Context) pronto para cópia e receitas operacionais de prompts rápidos para suporte (novos campos, depuração de logs, otimização de estilos).
+
+Além disso, faça o seguinte:
+- README.md: Configure o README.md na raiz de forma concisa. Adicione tags/badges de estado do projeto no topo (tecnologia, status, ambiente usando Shields.io). Inclua um diagrama de arquitetura em Mermaid (usuário -> Traefik -> Moodle -> MariaDB + Postal), a árvore de diretórios do projeto, tabela de requisitos mínimos e uma cheat sheet com comandos rápidos de sobrevivência (limpar cache, testar SCSS, ler logs). Adicione links markdown em formato absoluto (file://) para os 7 arquivos de docs com um resumo de uma linha para cada. Destaque em um parágrafo final a importância de manter e evoluir continuamente esta documentação.
+- Segurança: Faça uma verificação rigorosa nos arquivos gerados para garantir que não haja nenhuma senha, token de API ou credencial real exposta (utilize apenas placeholders informativos e variáveis de ambiente).
+
+Grave os arquivos diretamente no disco e me avise quando terminar.
+```
+
+---
+
+## 3. Receitas de Prompt para Casos de Suporte Comuns
 
 ### Receita A: Adicionar um Novo Campo de Perfil e Criar Botões
 > *Use este prompt caso precise criar novos aceites com botões sim/não no cadastro:*
