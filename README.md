@@ -4,6 +4,7 @@
 ![Postal Version](https://img.shields.io/badge/Postal-3.3.7-blue?logo=mail.ru&logoColor=white)
 ![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-11.4-blue?logo=mariadb&logoColor=white)
+![Mattermost Alerts](https://img.shields.io/badge/Mattermost-Alerts-0058CC?logo=mattermost&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-Ativo-green)
 
 Este diretório contém os códigos-fonte, pacotes compilados e guias arquiteturais para a plataforma de EAD do **CDC**, com o tema customizado **CDC Moodle** (baseado no design premium Uena) e infraestrutura baseada em Docker.
@@ -18,7 +19,10 @@ graph TD
     Proxy -->|Rede: web-network| Moodle[Moodle App: Apache + PHP 8.3]
     Moodle -->|Rede: db-network isolada| DB[Banco: MariaDB 11.4]
     Moodle -->|SMTP: Porta 25| Postal[SMTP Server: Postal]
-    Postal -->|Disparos de E-mail| User
+    B[Rotina de Backup] -->|Exportar Banco & Arquivos| DB
+    B -->|Backup Criptografado| BackupStore[Armazenamento Local/S3]
+    B -->|Alertas: Webhook| Mattermost[Mattermost Alerts Channel]
+    Moodle -->|Alertas do Sistema| Mattermost
 ```
 
 ---
@@ -46,7 +50,7 @@ Acesse a plataforma em: `http://localhost:8080`
 ```text
 cdc_moodle/
 ├── amd/                # Módulos Javascript assíncronos (AMD) do tema
-├── docs/               # Manuais DevOps, Guias de Migração e Políticas
+├── docs/               # Manuais DevOps, Guias de Migração, Backups e Mattermost
 ├── lang/               # Dicionários e traduções (pt_br) do tema CDC
 ├── pix/                # Ativos estáticos, logotipos e imagens do carrossel
 ├── scss/               # Folhas de estilo (Bootstrap 5 e overrides Uena)
@@ -70,6 +74,18 @@ cdc_moodle/
 
 ---
 
+## 🛠️ Configuração do Ambiente e Segredos
+
+O arquivo de variáveis de ambiente `.env` controla as chaves privadas do sistema.
+1. Copie o arquivo de exemplo:
+   ```bash
+   cp .env.example .env
+   ```
+2. Adicione as chaves reais.
+3. **ATENÇÃO:** Nunca commite o arquivo `.env` ou exponha segredos como a URL de webhook do Mattermost (`MATTERMOST_WEBHOOK_URL`) em commits, logs ou mensagens públicas.
+
+---
+
 ## ⏱️ Comandos Rápidos de Sobrevivência (Cheat Sheet)
 
 Use estes comandos no terminal da VPS para operações cotidianas de suporte:
@@ -87,6 +103,10 @@ Use estes comandos no terminal da VPS para operações cotidianas de suporte:
   ```bash
   docker logs --tail 100 -f cdc-ezpoint_moodle.1.xwi10emrzeha4xhzpmm2sy759
   ```
+* **Testar Webhook do Mattermost:**
+  ```bash
+  curl --fail --silent --show-error --max-time 10 -X POST -H "Content-Type: application/json" -d '{"text":"Teste de integracao do canal de alertas CDC Moodle concluido."}' "$MATTERMOST_WEBHOOK_URL"
+  ```
 
 ---
 
@@ -94,16 +114,17 @@ Use estes comandos no terminal da VPS para operações cotidianas de suporte:
 
 Abaixo estão os links para os documentos técnicos detalhados disponíveis no diretório `docs/`:
 
-1. 📂 **[Estratégia de Execução](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/estrategia_execu%C3%A7%C3%A3o.md):** Planejamento de repositórios Git separados para tema e infraestrutura, e o fluxo de testes em ambiente de staging local.
-2. 📖 **[Manual de Migração e Auditoria](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/migration_guide.md):** Manual de conexões SSH, comandos Linux de diagnóstico em modo leitura e scripts para download e backup da VPS.
-3. 🐳 **[Guia de Infraestrutura e Docker](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/ajuda_infra.md):** Desenho completo da topologia de rede isolada do MariaDB, do arquivo `docker-compose.yml` e modelo de variáveis `.env.example`.
-4. 📋 **[Cultura e Template de Post-Mortem](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/postmortem.md):** Diretrizes para análise retrospectiva sem culpa de falhas no servidor e template padrão de relatório de incidentes.
-5. 🛠️ **[Manual de Resolução de Problemas (Troubleshooting)](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/troubleshooting.md):** Soluções práticas para permissões de escrita, travamento de charset no banco, depurador de SCSS e portas SMTP do Postal.
-6. 💾 **[Política de Backup e Recuperação](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/politica%20de%20BKP.md):** Planejamento de backup 3-2-1, script Bash avançado criptografado via GPG com notificações Discord/Slack e roteiro de restore.
-7. 🤖 **[Hub de Contexto e Prompts de IA](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/prompt%20de%20IA.md):** Prompt de System Context e receitas prontas para interações ágeis e co-pilotagem de suporte com Inteligências Artificiais.
+- [Diretrizes de documentação](docs/diretrizes_documentacao.md) — Regras de criação, manutenção, revisão e evolução da documentação.
+- [Estratégia de execução](docs/estrategia_execucao.md) — Desenvolvimento, branches, ambientes, releases e implantação.
+- [Guia de migração](docs/migration_guide.md) — Acesso seguro, diagnóstico, exportação e migração de ambientes.
+- [Ajuda de infraestrutura](docs/ajuda_infra.md) — Containers, redes, portas, DNS, variáveis e Mattermost.
+- [Post-mortem](docs/postmortem.md) — Modelo sem culpabilização para análise de incidentes.
+- [Troubleshooting](docs/troubleshooting.md) — Diagnóstico e solução de problemas recorrentes.
+- [Política de backup](docs/politica_backup.md) — Backup, criptografia, retenção, restauração e alertas no Mattermost.
+- [Contexto para IA](docs/prompt_ia.md) — Contexto arquitetural e prompts operacionais para assistentes de IA.
 
 ---
 
 ## 💡 A Importância de Manter a Documentação Viva
 
-Esta documentação foi concebida não apenas como um histórico estático, mas como um **ativo operacional crítico** da equipe de tecnologia do CDC. O Moodle e o Postal rodam sob infraestruturas de microsserviços integradas cuja topologia e segredos técnicos devem permanecer claros. É dever de cada desenvolvedor, engenheiro de DevOps e assistente de inteligência artificial revisar, testar e **atualizar continuamente estes guias** a cada nova atualização de layout, migração de rede ou correção aplicada ao ecossistema, prevenindo retrabalhos e garantindo a continuidade do conhecimento.
+Esta documentação foi concebida não apenas como um histórico estático, mas como um **ativo operacional crítico** da equipe de tecnologia do CDC. O Moodle, o Postal e o Mattermost rodam sob infraestruturas de microsserviços integradas cuja topologia e segredos técnicos devem permanecer claros. É dever de cada desenvolvedor, engenheiro de DevOps e assistente de inteligência artificial revisar, testar e **atualizar continuamente estes guias** a cada nova atualização de layout, migração de rede ou correção aplicada ao ecossistema, prevenindo retrabalhos e garantindo a continuidade do conhecimento.

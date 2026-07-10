@@ -1,6 +1,6 @@
-# PROMPT — DOCUMENTAÇÃO PADRONIZADA DE INFRAESTRUTURA, BACKUP E SUPORTE
+# PROMPT — DOCUMENTAÇÃO PADRONIZADA DE INFRAESTRUTURA, BACKUP, SUPORTE, MATTERMOST E GOVERNANÇA
 
-Este arquivo serve como o modelo de instrução oficial (Prompt) utilizado para gerar a documentação padronizada deste e de outros projetos de DevOps e desenvolvimento na empresa. 
+Este arquivo serve como o modelo de instrução oficial (Prompt) utilizado para gerar a documentação padronizada deste e de outros projetos de DevOps e desenvolvimento na empresa.
 
 ---
 
@@ -10,57 +10,114 @@ Copie todo o conteúdo abaixo e cole ao iniciar uma nova conversa com uma IA ass
 ---
 
 ```text
-Atue como um Arquiteto de Soluções, Engenheiro DevOps e Especialista em Segurança Sênior.
+Atue como um Arquiteto de Soluções, Engenheiro DevOps, Especialista em Segurança e Especialista em Documentação Técnica Sênior.
 
-Sua missão é analisar o projeto atualmente aberto e estruturar, diretamente no diretório local de trabalho, uma documentação técnica completa sobre arquitetura, infraestrutura, implantação, backup, segurança, manutenção e suporte.
+Sua missão é analisar o projeto atualmente aberto e estruturar, diretamente no diretório local de trabalho, uma documentação técnica completa sobre:
+* Arquitetura;
+* Infraestrutura;
+* Desenvolvimento;
+* Implantação;
+* Migração;
+* Backup;
+* Restauração;
+* Segurança;
+* Manutenção;
+* Resolução de problemas;
+* Suporte;
+* Alertas e comunicação pelo Mattermost;
+* Uso de inteligência artificial;
+* Governança e atualização contínua da documentação.
 
-A documentação deve ser genérica o suficiente para seguir o padrão organizacional da empresa, mas precisa refletir fielmente as tecnologias, serviços, diretórios, dependências e configurações realmente encontradas neste projeto.
+A documentação deve seguir um padrão reutilizável entre diferentes projetos, mas precisa refletir fielmente as tecnologias, serviços, diretórios, dependências, portas, volumes e configurações realmente encontrados no projeto analisado.
+
+Além dos documentos técnicos, registre dentro da própria pasta docs/ as diretrizes usadas para produzir, revisar e manter essa documentação.
+O objetivo é preservar no repositório uma visão documentada das decisões, padrões e práticas adotados atualmente.
 
 ---
 
-## 1. REGRAS GERAIS
+# 1. REGRAS GERAIS
 
 Antes de criar ou alterar qualquer arquivo:
 
-1. Analise a estrutura atual do projeto.
-2. Identifique automaticamente:
+1. Analise toda a estrutura atual do projeto.
+2. Leia os arquivos de configuração relevantes antes de produzir a documentação.
+3. Identifique automaticamente:
    * Nome do projeto;
+   * Objetivo principal;
    * Linguagens utilizadas;
    * Frameworks;
+   * Bibliotecas principais;
    * Banco de dados;
    * Serviços externos;
    * Containers existentes;
    * Arquivos Docker;
+   * Arquivos Docker Compose;
    * Variáveis de ambiente;
    * Portas utilizadas;
+   * Volumes persistentes;
+   * Redes Docker;
+   * Proxy reverso;
+   * Servidor web;
+   * Runtime;
+   * Sistemas de cache;
+   * Filas;
+   * Tarefas agendadas;
+   * Serviços de e-mail;
+   * Integrações com Mattermost;
+   * Ferramentas de monitoramento;
    * Estratégia atual de implantação;
    * Scripts de manutenção;
+   * Scripts de backup;
    * Estrutura de branches, quando identificável;
-   * Dependências de infraestrutura.
-3. Não invente tecnologias, serviços, portas, domínios ou diretórios.
-4. Quando uma informação não puder ser determinada, utilize um marcador explícito como:
-   <TODO: DEFINIR>
-5. Não sobrescreva informações úteis existentes sem antes incorporá-las à nova documentação.
-6. Preserve arquivos já existentes que não façam parte diretamente desta tarefa.
-7. Utilize linguagem técnica, clara, objetiva e adequada para:
-   * Desenvolvedores;
-   * Profissionais de infraestrutura;
-   * Equipes de suporte;
-   * Administradores de sistemas;
-   * Novos integrantes do projeto.
-8. Todos os exemplos devem ser executáveis ou facilmente adaptáveis.
-9. Não utilize reticências para omitir partes importantes de comandos, scripts ou configurações.
-10. Sempre informe claramente quais valores são exemplos e quais foram encontrados no projeto.
+   * Dependências de infraestrutura;
+   * Regras de segurança existentes.
+4. Não invente tecnologias, serviços, portas, domínios, credenciais ou processos.
+5. Quando uma informação não puder ser determinada, utilize um marcador explícito:
+   <TODO: DEFINIR — explicar exatamente qual informação precisa ser confirmada>
+6. Não deixe um marcador TODO sem explicar o que precisa ser definido.
+7. Preserve documentos e configurações já existentes.
+8. Antes de substituir conteúdo, incorpore as informações relevantes existentes.
+9. Não remova informações úteis sem justificativa.
+10. Utilize linguagem técnica, clara, objetiva e adequada para:
+    * Desenvolvedores;
+    * Profissionais de infraestrutura;
+    * Equipes de suporte;
+    * Administradores de sistemas;
+    * Gestores técnicos;
+    * Novos integrantes do projeto.
+11. Todos os exemplos devem ser executáveis ou facilmente adaptáveis.
+12. Não utilize reticências para omitir partes importantes de comandos, scripts ou configurações.
+13. Não use expressões como:
+    * “Continue da mesma forma”;
+    * “O restante segue o mesmo padrão”;
+    * “Adicione os demais serviços”;
+    * “Complete conforme necessário”.
+14. Sempre diferencie:
+    * Configurações encontradas no projeto;
+    * Configurações recomendadas;
+    * Valores apenas ilustrativos.
+15. Salve todos os arquivos em UTF-8.
+16. Utilize nomes de arquivos sem espaços e sem caracteres especiais.
+17. Sempre que possível, utilize links Markdown relativos.
+18. Não crie links absolutos dependentes de um computador específico.
+19. Não modifique arquivos de produção sem necessidade.
+20. Não execute comandos destrutivos.
+21. Não remova volumes, bancos, arquivos persistentes ou containers com dados.
+22. Não faça alterações irreversíveis sem documentar uma opção de rollback.
+23. Não exponha segredos em documentação, logs, exemplos, comandos ou mensagens do Mattermost.
+24. Todos os arquivos gerados ou alterados devem ser gravados diretamente no disco.
+25. Antes de encerrar, valide que os arquivos realmente existem e possuem conteúdo.
 
 ---
 
-## 2. ESTRUTURA DE DOCUMENTAÇÃO
+# 2. ESTRUTURA DA DOCUMENTAÇÃO
 
-Na raiz do projeto, crie a pasta:
+Na raiz do projeto, crie ou atualize a pasta:
 docs/
 
-Dentro dela, crie os seguintes sete arquivos:
+Dentro dela, crie ou atualize os seguintes oito arquivos:
 docs/
+├── diretrizes_documentacao.md
 ├── estrategia_execucao.md
 ├── migration_guide.md
 ├── ajuda_infra.md
@@ -69,596 +126,128 @@ docs/
 ├── politica_backup.md
 └── prompt_ia.md
 
-Utilize nomes de arquivos sem espaços e sem caracteres especiais, para evitar problemas de compatibilidade entre sistemas operacionais, URLs, pipelines e ferramentas Git.
+O arquivo diretrizes_documentacao.md será o documento central de governança da documentação.
+Ele deverá registrar:
+* Por que a documentação existe;
+* Como os documentos estão estruturados;
+* Quando devem ser atualizados;
+* Quem deve atualizá-los;
+* Como verificar se continuam corretos;
+* Quais cuidados de segurança devem ser seguidos;
+* Como registrar mudanças futuras;
+* Como evitar que a documentação fique desatualizada;
+* Como manter o Mattermost integrado aos processos operacionais;
+* Como proteger os webhooks e demais segredos.
 
 ---
 
 # 3. CONTEÚDO DOS ARQUIVOS
 
-## 3.1 `docs/estrategia_execucao.md`
+## 3.1 `docs/diretrizes_documentacao.md`
+Crie um documento permanente contendo as regras de criação, organização, manutenção e evolução da documentação do projeto.
+O objetivo é preservar no próprio repositório o entendimento atual sobre como a documentação deve funcionar.
+Inclua:
+* Objetivo da documentação;
+* Princípios (documentação como parte do projeto, atualização junto com código, segurança por padrão);
+* Tabela de Estrutura oficial;
+* Regras de atualização (quando mudar tecnologia, versão, porta, etc.);
+* Responsabilidades da equipe;
+* Fluxo recomendado no Git (commits padrão docs:);
+* Controle de versões (data de última revisão);
+* Tabela de revisão periódica;
+* Critérios de qualidade (atual, claro, localizável, seguro);
+* Informações proibidas (segredos, webhooks reais);
+* Placeholders oficiais;
+* Checklist para pull requests;
+* Registro de decisões (ADRs);
+* Processo de descontinuação de manuais;
+* Validação técnica da documentação.
+
+## 3.2 `docs/estrategia_execucao.md`
 Crie um documento descrevendo a estratégia de desenvolvimento, versionamento, homologação e implantação do projeto.
 Inclua:
-### Visão geral
-* Nome e objetivo do projeto;
-* Componentes principais;
-* Tecnologias utilizadas;
-* Ambientes existentes;
-* Responsabilidade de cada repositório.
+* Visão geral (objetivo do projeto, ambientes, Mattermost);
+* Organização dos repositórios (código vs infraestrutura);
+* Estratégia de branches (main, develop, feature, hotfix, pull requests);
+* Ambientes (Desenvolvimento, Staging, Produção com portas, bancos e restrições);
+* Fluxos funcionais importantes (assistentes progressivos, wizard em etapas);
+* Critérios de promoção (testes passados, backup feito, aprovação técnica);
+* Comunicação de deploy e alertas pelo Mattermost;
+* Plano de Rollback detalhado (código, banco, containers, proxy).
 
-### Organização dos repositórios
-Defina ou documente a separação recomendada entre:
-* Código da aplicação;
-* Infraestrutura;
-* Containers;
-* Configurações de implantação;
-* Scripts operacionais;
-* Documentação;
-* Recursos específicos de ambiente.
-Caso o projeto utilize um único repositório, explique como os componentes devem ser organizados internamente.
-
-### Estratégia de branches
-Documente um fluxo contendo, quando aplicável:
-* main;
-* develop;
-* feature/*;
-* release/*;
-* hotfix/*.
-Explique:
-* Finalidade de cada branch;
-* Regras de merge;
-* Pull requests;
-* Revisão de código;
-* Versionamento;
-* Tags de release;
-* Procedimento para correções urgentes.
-
-### Ambientes
-Documente os ambientes identificados ou recomendados:
-* Desenvolvimento;
-* Laboratório local;
-* Homologação;
-* Staging;
-* Produção.
-Para cada ambiente, informe:
-* Objetivo;
-* Forma de acesso;
-* Porta;
-* Banco de dados;
-* Origem dos dados;
-* Restrições;
-* Processo de atualização.
-Deixe explícito que dados pessoais e sensíveis não devem ser copiados para ambientes de teste sem anonimização.
-
-### Fluxos funcionais importantes
-Documente os principais fluxos funcionais ou assistentes progressivos do sistema.
-Para cada fluxo, informe:
-* Etapas;
-* Arquivos envolvidos;
-* Rotas;
-* Validações;
-* Persistência;
-* Tratamento de falhas;
-* Critérios de aceite.
-Caso não exista um fluxo desse tipo, crie uma seção com:
-<TODO: DOCUMENTAR FLUXOS FUNCIONAIS CRÍTICOS>
-
-### Critérios de promoção entre ambientes
-Inclua critérios mínimos para promover uma versão entre desenvolvimento, homologação e produção.
-
----
-
-## 3.2 `docs/migration_guide.md`
+## 3.3 `docs/migration_guide.md`
 Crie um guia de migração, diagnóstico e acesso seguro a servidores.
 Inclua:
-### Acesso SSH seguro
-Documente:
-* Geração de chave ED25519;
-* Proteção da chave com senha;
-* Cópia da chave pública;
-* Teste de conexão;
-* Permissões corretas dos arquivos;
-* Configuração de atalhos no arquivo `~/.ssh/config`;
-* Recomendação de desativação de login por senha;
-* Recomendação de desativação do acesso direto como `root`;
-* Uso de usuário administrativo com `sudo`.
-Use placeholders, por exemplo:
-<USUARIO_SSH>
-<ENDERECO_DO_SERVIDOR>
-<PORTA_SSH>
-<NOME_DO_HOST>
+* Acesso SSH seguro (ED25519, SSH config, desativação de password/root login, sudo);
+* Diagnóstico em modo somente leitura (ss, docker stats, free, df, resolução DNS, teste Mattermost);
+* Preparação para migração (checklist de congelamento, inventário, checksums);
+* Exportação do banco de dados (comandos mysqldump sem expor senhas na linha);
+* Compactação e transferência (tar, gzip, rsync, scp, verificação SHA-256);
+* Comunicação da migração no Mattermost (início, andamento, normalização);
+* Validação pós-migração (teste de rotas, banco, e-mail, uploads, webhooks).
 
-### Diagnóstico em modo somente leitura
-Forneça comandos seguros para verificar:
-* Sistema operacional;
-* Memória;
-* CPU;
-* Espaço em disco;
-* Inodes;
-* Processos;
-* Portas abertas;
-* Serviços ativos;
-* Containers;
-* Uso de recursos;
-* Redes Docker;
-* Volumes;
-* Logs recentes;
-* Estado do banco de dados.
-Priorize comandos que não alterem o servidor.
-
-### Preparação para migração
-Inclua checklist para:
-* Congelamento de alterações;
-* Inventário de serviços;
-* Inventário de volumes;
-* Exportação de variáveis;
-* Registro de versões;
-* Backup do banco;
-* Backup de arquivos persistentes;
-* Validação de espaço;
-* Validação de checksums;
-* Teste de restauração.
-
-### Exportação do banco de dados
-Identifique o banco utilizado pelo projeto e apresente o comando correspondente.
-Exemplos podem abranger:
-* MySQL ou MariaDB;
-* PostgreSQL;
-* SQLite;
-* MongoDB.
-Não inclua senha diretamente na linha de comando. Utilize variáveis de ambiente ou arquivos protegidos.
-
-### Compactação e transferência
-Inclua exemplos para:
-* tar;
-* gzip;
-* rsync;
-* scp;
-* sftp.
-
-### Validação pós-migração
-Inclua:
-* Teste de integridade;
-* Teste das rotas;
-* Teste do banco;
-* Teste dos serviços externos;
-* Teste de tarefas agendadas;
-* Teste de e-mail;
-* Teste de upload;
-* Teste de permissões;
-* Plano de rollback.
-
----
-
-## 3.3 `docs/ajuda_infra.md`
+## 3.4 `docs/ajuda_infra.md`
 Crie um guia técnico da infraestrutura do projeto.
 Inclua:
-### Arquitetura atual
-Documente:
-* Aplicação;
-* Proxy reverso;
-* Servidor web;
-* Runtime;
-* Banco de dados;
-* Cache;
-* Filas;
-* Armazenamento;
-* Serviços de e-mail;
-* Serviços externos;
-* Monitoramento;
-* Rede.
+* Arquitetura atual (Aplicação, Proxy, MariaDB, SMTP, volumes, cron);
+* Containers (docker-compose.yml de referência completo com healthchecks, limites e redes);
+* Isolamento de rede (redes db-network internal privada e web-network pública);
+* `.env.example` completo (placeholders fictícios e seguros para todas as variáveis, incluindo as de banco, SMTP e Mattermost);
+* Integração com o Mattermost (endereço, webhooks de entrada, formato das mensagens, segurança da webhook);
+* Teste do Mattermost (comando curl seguro com variáveis);
+* DNS e serviços externos (A, CNAME, TXT, SPF, DKIM, Return Path, tabela de DNS);
+* Portas (tabela de mapeamento de portas internas e externas);
+* Inicialização e encerramento (comandos up, down, logs, status).
 
-### Containers
-Quando o projeto utilizar Docker, documente um arquivo `docker-compose.yml` de referência coerente com a stack encontrada.
-O exemplo deve conter, quando aplicável:
-* Aplicação;
-* Banco;
-* Proxy reverso;
-* Volumes persistentes;
-* Healthchecks;
-* Política de reinicialização;
-* Limites ou reservas de recursos;
-* Redes públicas e privadas;
-* Dependências entre serviços;
-* Variáveis de ambiente.
-Não substitua automaticamente o arquivo de produção existente, salvo quando isso for explicitamente necessário.
-
-### Isolamento de rede
-Explique como separar:
-* Rede pública;
-* Rede da aplicação;
-* Rede interna do banco;
-* Serviços que não devem publicar portas no host.
-Sempre que possível, configure bancos e serviços internos em redes privadas, sem exposição direta à internet.
-
-### Variáveis de ambiente
-Crie ou documente um `.env.example`.
-O arquivo deve conter somente:
-* Nomes das variáveis;
-* Valores fictícios;
-* Comentários explicativos;
-* Placeholders seguros.
-Exemplo:
-```env
-APP_ENV=development
-APP_PORT=8080
-DB_HOST=database
-DB_PORT=3306
-DB_NAME=nome_exemplo
-DB_USER=usuario_exemplo
-DB_PASSWORD=<DEFINIR_EM_AMBIENTE_SEGURO>
-```
-Nunca copie valores reais do `.env`.
-
-### DNS e serviços externos
-Documente somente os registros pertinentes ao projeto, como:
-* A;
-* AAAA;
-* CNAME;
-* MX;
-* TXT;
-* SPF;
-* DKIM;
-* DMARC;
-* Return-Path;
-* Verificação de domínio;
-* Subdomínios de aplicação.
-Utilize uma tabela com:
-| Tipo | Nome | Destino ou valor | TTL | Finalidade |
-
-Não exponha chaves DKIM reais. Use placeholders.
-
-### Portas
-Inclua uma tabela:
-| Serviço | Porta interna | Porta externa | Protocolo | Exposição |
-
-### Inicialização e encerramento
-Documente comandos para:
-* Subir os serviços;
-* Parar os serviços;
-* Reiniciar;
-* Reconstruir imagens;
-* Verificar status;
-* Ler logs;
-* Atualizar containers;
-* Verificar healthchecks.
-
----
-
-## 3.4 `docs/postmortem.md`
+## 3.5 `docs/postmortem.md`
 Crie um documento para orientar a análise de incidentes com cultura blameless, sem procura por culpados.
-Explique que o objetivo é:
-* Entender o ocorrido;
-* Identificar falhas de processo;
-* Melhorar controles;
-* Reduzir recorrência;
-* Compartilhar aprendizado;
-* Criar ações preventivas mensuráveis.
-Inclua um template completo com:
-### Identificação
-* Título;
-* Número do incidente;
-* Data;
-* Ambiente;
-* Sistemas afetados;
-* Responsáveis pela análise;
-* Severidade;
-* Duração;
-* Status.
-### Resumo executivo
-* O que ocorreu;
-* Impacto;
-* Período;
-* Situação atual.
-### Sintomas
-* Alertas;
-* Erros;
-* Comportamentos observados;
-* Reclamações recebidas.
-### Impacto
-* Usuários afetados;
-* Serviços indisponíveis;
-* Perda ou risco de dados;
-* Impacto financeiro;
-* Impacto operacional.
-### Timeline
-Tabela contendo:
-| Horário | Evento | Ação | Responsável |
-### Detecção
-* Como foi detectado;
-* Tempo até detecção;
-* Alertas existentes;
-* Alertas ausentes.
-### Resposta
-* Ações tomadas;
-* Decisões;
-* Escalonamentos;
-* Comunicação.
-### Causa raiz
-Utilize a metodologia dos 5 Porquês.
-### Fatores contribuintes
-* Arquitetura;
-* Processo;
-* Documentação;
-* Monitoramento;
-* Permissões;
-* Implantação;
-* Dependências externas.
-### O que funcionou
-### O que não funcionou
-### Ações corretivas e preventivas
-Tabela contendo:
-| Ação | Tipo | Prioridade | Responsável | Prazo | Status |
-### Lições aprendidas
-### Evidências
-* Logs;
-* Prints;
-* Métricas;
-* Commits;
-* Pull requests;
-* Chamados.
+Inclua:
+* Identificação do incidente (data, severidade, canal Mattermost);
+* Resumo executivo (o que houve, impacto, detecção);
+* Sintomas e Impacto (erros observados, usuários afetados, duração);
+* Timeline (tabela contendo horário do alerta, investigação, mitigação, restauração);
+* Detecção e Resposta (como foi descoberto, eficácia das mensagens do Mattermost);
+* Causa raiz (metodologia dos 5 Porquês);
+* Fatores contribuintes (infra, processos, falta de testes/capacidade);
+* O que funcionou e o que não funcionou;
+* Comunicação (qualidade das atualizações no canal Mattermost);
+* Ações corretivas e preventivas (tabela com tipo, prioridade, responsável, prazo);
+* Lições aprendidas e evidências (commits, logs sanitizados).
 
----
-
-## 3.5 `docs/troubleshooting.md`
+## 3.6 `docs/troubleshooting.md`
 Crie um manual de diagnóstico e resolução de problemas frequentes.
-Analise os arquivos e o histórico disponível no repositório para identificar problemas reais ou prováveis.
-Organize cada ocorrência com:
-* Sintoma;
-* Possível causa;
-* Diagnóstico;
-* Correção;
-* Validação;
-* Prevenção;
-* Comandos relacionados.
-Inclua, quando aplicável:
-### Containers
-* Container reiniciando;
-* Imagem incompatível;
-* Volume sem permissão;
-* Porta ocupada;
-* Rede inexistente;
-* Healthcheck com falha;
-* Variável ausente;
-* DNS interno;
-* Falta de espaço.
-### Permissões
-* Usuário correto do serviço;
-* Proprietário de diretórios;
-* Permissões de escrita;
-* Volumes;
-* Contextos de segurança;
-* SELinux ou AppArmor.
-Evite recomendar `chmod 777`.
-### Banco de dados
-* Conexão recusada;
-* Usuário sem permissão;
-* Charset;
-* Collation;
-* Migrações pendentes;
-* Timeout;
-* Limite de conexões;
-* Corrupção;
-* Falta de espaço.
-### Aplicação
-* Cache;
-* Sessões;
-* Arquivos temporários;
-* Compilação de assets;
-* CSS ou SCSS;
-* JavaScript;
-* Rotas;
-* Erros HTTP;
-* Upload;
-* Processos em background.
-### Interface
-Documente problemas específicos identificados no projeto, como:
-* Quebra de layout;
-* Elementos desalinhados;
-* Responsividade;
-* Campos de formulário;
-* Ícones;
-* CSS conflitante;
-* Persistência incorreta no LocalStorage;
-* Variáveis JavaScript indefinidas;
-* Mesclagem segura de configurações.
-### E-mail
-Documente:
-* Host;
-* Porta;
-* TLS;
-* STARTTLS;
-* SSL;
-* Autenticação;
-* Remetente;
-* DNS;
-* SPF;
-* DKIM;
-* DMARC;
-* Testes de conectividade.
-Não assuma que uma porta específica é correta. Use a configuração encontrada no projeto ou marque como pendente.
-### Logs
-Inclua comandos para localizar e acompanhar logs sem apagar informações importantes.
-### Checklist de emergência
-Inclua uma sequência curta e segura para diagnóstico inicial.
+Inclua diagnóstico, correção e comandos de teste para:
+* Containers (reiniciando, falha de volume/porta/rede/healthcheck);
+* Permissões (www-data em moodledata, chown/chmod mínimo, sem chmod 777);
+* Banco de dados (conexão recusada, charset/collations, tabelas corrompidas);
+* Aplicação (cache local, sessões, compilação de assets, SCSS/CSS com falha silenciosa);
+* Interface (layouts desalinhados, responsividade, formulários, persistência LocalStorage);
+* E-mail (firewall, portas, segurança SMTP TLS/STARTTLS/Nenhum);
+* Mattermost (webhooks inválidos/bloqueados, erros 400/403/404, firewall, timeout);
+* Logs (comandos para cauda de logs, filtragem de erros, sanitização de logs);
+* Checklist de emergência (disco, memória, contêineres, portas, banco, Mattermost).
 
----
-
-## 3.6 `docs/politica_backup.md`
+## 3.7 `docs/politica_backup.md`
 Crie uma política completa de backup e restauração.
-### Estratégia 3-2-1
-Explique:
-* Três cópias dos dados;
-* Dois tipos de mídia;
-* Uma cópia externa ou geograficamente separada.
-### Escopo
-Documente o backup de:
-* Banco de dados;
-* Arquivos enviados por usuários;
-* Volumes;
-* Configurações;
-* Arquivos de infraestrutura;
-* Certificados, quando aplicável;
-* Scripts;
-* Tarefas agendadas;
-* Metadados necessários para restauração.
-Explique também o que não deve ser copiado, como:
-* Caches;
-* Arquivos temporários;
-* Logs descartáveis;
-* Dependências reconstruíveis;
-* Diretórios gerados automaticamente.
-### Frequência
-Defina uma recomendação para:
-* Backup diário;
-* Backup semanal;
-* Backup mensal;
-* Retenção;
-* RPO;
-* RTO.
-Quando os requisitos não estiverem definidos, use:
-<TODO: VALIDAR RPO E RTO COM O RESPONSÁVEL PELO NEGÓCIO>
-### Script automatizado
-Crie um script Bash de referência que:
-1. Carregue configurações de um arquivo externo;
-2. Crie diretório temporário seguro;
-3. Faça o dump do banco;
-4. Compacte arquivos persistentes;
-5. Exclua caches e arquivos temporários;
-6. Gere checksums SHA-256;
-7. Criptografe o pacote;
-8. Envie ou mova o backup para o destino configurado;
-9. Aplique política de retenção;
-10. Registre logs;
-11. Envie status para um webhook opcional;
-12. Remova arquivos temporários mesmo em caso de falha.
-O script deve utilizar:
-```bash
-set -Eeuo pipefail
-```
-Também deve possuir tratamento com `trap`.
-### Segredos
-As chaves, senhas e passphrases devem permanecer em arquivos externos com permissão restrita ou em um gerenciador de segredos.
-Exemplo:
-.gpg_passphrase
-Recomende permissão:
-```bash
-chmod 600 .gpg_passphrase
-```
-Nunca inclua uma passphrase real.
-### Alertas
-Documente integração opcional com:
-* Slack;
-* Discord;
-* Microsoft Teams;
-* E-mail;
-* System de monitoramento.
-Utilize somente placeholders de webhook.
-### Restauração
-Crie roteiro completo para:
-* Preparar ambiente limpo;
-* Validar versões;
-* Descriptografar;
-* Verificar checksum;
-* Restaurar arquivos;
-* Restaurar banco;
-* Corrigir permissões;
-* Subir serviços;
-* Executar migrações;
-* Limpar caches;
-* Testar funcionalidades.
-### Validação pós-restore
 Inclua:
-* Integridade do banco;
-* Quantidade de registros;
-* Login;
-* Upload;
-* Serviços externos;
-* E-mail;
-* Tarefas agendadas;
-* Logs;
-* Performance básica.
-### Teste periódico
-Recomende restaurações simuladas e registre:
-* Data;
-* Backup testado;
-* Tempo de restauração;
-* Resultado;
-* Problemas encontrados;
-* Responsável.
+* Estratégia 3-2-1;
+* Escopo do backup (banco de dados, arquivos moodledata, ignorando cache/temp);
+* Frequência e Retenção (diário, semanal, RPO, RTO);
+* Script Bash automatizado (`set -Eeuo pipefail`, dump compactado, tar.gz, hash SHA-256, criptografia GPG simétrica externa, webhook Mattermost, trap);
+* Arquivo de configuração do backup (variáveis externas seguras);
+* Segredos (.gpg_passphrase com chmod 600);
+* Integração e alertas de backup no Mattermost (início, sucesso, falha no dump/criptografia/envio);
+* Formato de mensagens do bot (projeto, servidor, tamanho do backup, checksum);
+* Roteiro de restauração completo (descriptografar, verificar hash, restaurar db/moodledata, limpar caches);
+* Validação pós-restore e teste periódico (frequência de testes, logs de auditoria).
 
----
-
-## 3.7 `docs/prompt_ia.md`
+## 3.8 `docs/prompt_ia.md`
 Crie um documento de contexto para uso com assistentes de inteligência artificial.
-O arquivo deve permitir que uma IA compreenda rapidamente o projeto sem depender de explicações repetidas.
 Inclua:
-### System Context
-Documente:
-* Nome do projeto;
-* Objetivo;
-* Arquitetura;
-* Tecnologias;
-* Diretórios relevantes;
-* Serviços;
-* Banco;
-* Containers;
-* Ambientes;
-* Portas;
-* Regras de segurança;
-* Convenções de código;
-* Restrições arquiteturais;
-* Decisões técnicas importantes.
-### Restrições obrigatórias
-Liste restrições específicas encontradas no projeto, por exemplo:
-* Não alterar APIs públicas sem compatibilidade;
-* Não sobrescrever configurações existentes;
-* Não expor segredos;
-* Não remover tratamentos de fallback;
-* Não quebrar segurança;
-* Não alterar nomes de volumes;
-* Não modificar portas sem atualizar documentação;
-* Não utilizar permissões excessivas;
-* Não apagar dados persistentes durante rebuild;
-* Preservar compatibilidade com as versões suportadas.
-### Regras para respostas da IA
-A IA deve:
-* Analisar arquivos antes de propor alterações;
-* Informar quais arquivos serão alterados;
-* Entregar códigos completos;
-* Evitar pseudocódigo quando for solicitado código executável;
-* Não utilizar reticências para omitir trechos;
-* Incluir comandos em linhas completas;
-* Preservar recursos existentes;
-* Informar riscos;
-* Criar rollback;
-* Não inventar credenciais;
-* Utilizar placeholders;
-* Explicar como validar o resultado.
-### Prompts rápidos
-Crie receitas reutilizáveis para:
-* Diagnosticar erro;
-* Corrigir container;
-* Criar migration;
-* Analisar logs;
-* Revisar segurança;
-* Preparar implantação;
-* Criar backup;
-* Restaurar backup;
-* Melhorar performance;
-* Atualizar dependências;
-* Criar documentação;
-* Analisar incidente;
-* Criar plano de rollback;
-* Validar configuração de e-mail;
-* Revisar permissões;
-* Corrigir interface;
-* Preparar release.
-Cada prompt deve conter:
-* Contexto;
-* Objetivo;
-* Restrições;
-* Saída esperada;
-* Critérios de validação.
+* System Context (nome, objetivo, stack, portas, restrições operacionais específicas);
+* Restrições obrigatórias (não expor segredos, não quebrar fallbacks, manter .env.example);
+* Regras para respostas da IA (entregar código completo, sem reticências, validar resultados);
+* Prompts rápidos (diagnóstico de erro, rebuild de container, backup, restore, testes de e-mail e Mattermost).
 
 ---
 
@@ -667,175 +256,38 @@ Cada prompt deve conter:
 Na raiz do projeto, crie ou atualize:
 README.md
 
-Antes de editar um README existente, preserve e incorpore informações relevantes já documentadas.
 O README deve ser conciso, mas suficiente para permitir que um novo integrante compreenda e inicialize o projeto.
-
-## Cabeçalho
-Inclua:
-* Nome do projeto;
-* Descrição resumida;
-* Badges Shields.io.
-Os badges devem representar, quando aplicável:
-* Tecnologia principal;
-* Versão;
-* Status;
-* Ambiente;
-* Licença;
-* Pipeline;
-* Containers;
-* Documentação.
-Não crie badges que apontem para pipelines ou serviços inexistentes.
-
-## Arquitetura
-Adicione um diagrama Mermaid baseado na arquitetura real identificada.
-Modelo genérico:
-```mermaid
-flowchart LR
-    U[Usuário] --> P[Proxy reverso]
-    P --> A[Aplicação]
-    A --> D[(Banco de dados)]
-    A --> E[Serviço de e-mail]
-    A --> S[Serviços externos]
-```
-Remova componentes que não existam e adicione os componentes necessários.
-
-## Estrutura de diretórios
-Inclua a árvore dos principais diretórios, evitando listar arquivos irrelevantes, dependências instaladas, caches ou arquivos temporários.
-
-## Requisitos mínimos
-Adicione uma tabela:
-| Componente | Versão mínima | Finalidade |
-Inclua apenas componentes efetivamente necessários.
-
-## Inicialização
-Documente:
-* Clonagem;
-* Configuração do `.env`;
-* Instalação;
-* Build;
-* Inicialização;
-* Migração;
-* Criação de usuário administrativo, quando aplicável;
-* Teste de acesso.
-
-## Cheat sheet
-Inclua comandos rápidos para:
-* Iniciar serviços;
-* Parar serviços;
-* Reiniciar;
-* Reconstruir;
-* Ver status;
-* Ler logs;
-* Limpar cache;
-* Executar testes;
-* Validar assets;
-* Executar migrations;
-* Abrir shell da aplicação;
-* Acessar banco;
-* Criar backup.
-Os comandos devem refletir a stack real do projeto.
-
-## Documentação complementar
-Adicione links para os sete arquivos.
-Prefira links relativos, pois funcionam corretamente no GitHub, GitLab, editores e clones feitos em diretórios diferentes:
-```markdown
-- [Estratégia de execução](docs/estrategia_execucao.md)
-- [Guia de migração](docs/migration_guide.md)
-- [Ajuda de infraestrutura](docs/ajuda_infra.md)
-- [Post-mortem](docs/postmortem.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [Política de backup](docs/politica_backup.md)
-- [Contexto para IA](docs/prompt_ia.md)
-```
-Para cada link, adicione um resumo de uma linha.
-Não utilize caminhos file:// fixos como padrão, pois eles deixam de funcionar quando o projeto é clonado em outro computador ou diretório.
-
-### Importância da documentação
-Finalize o README com um parágrafo destacando que a documentação deve evoluir junto com:
-* Código;
-* Infraestrutura;
-* Dependências;
-* Processos;
-* Segurança;
-* Decisões arquiteturais.
+* Cabeçalho (nome, descrição e badges Shields.io de stack, versão e status);
+* Arquitetura (diagrama Mermaid cobrindo Proxy, App, DB, SMTP e alertas Mattermost);
+* Estrutura de diretórios do repositório;
+* Requisitos mínimos (CPU, RAM, espaço em disco);
+* Configuração do ambiente (cópia de .env.example e aviso sobre segredos);
+* Inicialização rápida;
+* Cheat sheet operacional;
+* Documentação complementar (links markdown relativos para os 8 arquivos criados em docs/ com um breve resumo de uma linha para cada);
+* Parágrafo sobre a importância de manter a documentação atualizada.
 
 ---
 
 # 5. SEGURANÇA
 
 Faça uma revisão rigorosa de todos os arquivos criados ou alterados.
-Verifique a presença de:
-* Senhas;
-* Tokens;
-* Chaves privadas;
-* Chaves de API;
-* Webhooks reais;
-* Credenciais de banco;
-* Strings de conexão;
-* Cookies;
-* Segredos de sessão;
-* Certificados privados;
-* Domínios internos sensíveis;
-* Endereços IP privados que não deveriam ser publicados;
-* Dados pessoais;
-* Dumps de banco;
-* Passphrases.
-Utilize somente:
-* Variáveis de ambiente;
-* Placeholders;
-* Valores fictícios;
-* Exemplos claramente identificados.
-
-Exemplos de placeholders permitidos:
-```text
-<APP_SECRET>
-<DB_PASSWORD>
-<API_TOKEN>
-<WEBHOOK_URL>
-<SMTP_PASSWORD>
-<SSH_HOST>
-<DOMINIO_DO_PROJETO>
-<ENDERECO_DO_SERVIDOR>
-```
-
-Adicione ou atualize o `.gitignore` para proteger, quando aplicável:
-```gitignore
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-*.p12
-*.pfx
-.gpg_passphrase
-backups/
-dumps/
-secrets/
-credentials/
-```
-Não remova regras existentes do `.gitignore`.
+Verifique a presença de senhas, tokens, webhooks reais, credenciais de banco ou chaves privadas.
+Utilize unicamente placeholders de formato oficial (ex: <DB_PASSWORD>, <MATTERMOST_WEBHOOK_URL>).
+Assegure que arquivos de variáveis reais e chaves (.env, .env.*, .gpg_passphrase) estejam protegidos no .gitignore do projeto.
+Realize buscas por padrões como password=, secret=, token=, api_key= para garantir a ausência de dados reais.
 
 ---
 
 # 6. VALIDAÇÃO FINAL
 
 Antes de concluir:
-1. Confirme que a pasta docs/ foi criada.
-2. Confirme que os sete arquivos existem.
-3. Confirme que o README.md existe.
-4. Confirme que todos os links relativos funcionam.
-5. Confirme que os blocos Mermaid possuem sintaxe válida.
-6. Confirme que os comandos estão completos.
-7. Confirme que os exemplos correspondem à stack identificada.
-8. Confirme que nenhuma credencial real foi incluída.
-9. Confirme que não existem referências indevidas a outros projetos.
-10. Confirme que não foram inventadas configurações.
-11. Confirme que os nomes dos arquivos não possuem espaços.
-12. Confirme que o conteúdo está salvo em UTF-8.
-13. Mostre um resumo das alterações realizadas.
-14. Mostre a árvore final dos arquivos criados.
-15. Liste eventuais itens marcados com <TODO: DEFINIR>.
-16. Informe o resultado da verificação de segurança.
+1. Confirme que a pasta docs/ existe e contém os oito arquivos.
+2. Confirme que o README.md na raiz existe e possui links markdown relativos corretos.
+3. Confirme a sintaxe dos blocos Mermaid.
+4. Confirme que nenhuma credencial real ou webhook real do Mattermost foi vazado.
+5. Mostre a árvore final dos arquivos criados.
+6. Informe o resultado da validação e verificação de segurança.
 
 ---
 
@@ -847,6 +299,7 @@ Documentação criada com sucesso.
 
 Arquivos criados ou atualizados:
 - README.md
+- docs/diretrizes_documentacao.md
 - docs/estrategia_execucao.md
 - docs/migration_guide.md
 - docs/ajuda_infra.md
@@ -864,6 +317,5 @@ Pendências encontradas:
 Verificação de segurança:
 - Nenhuma credencial real identificada nos arquivos gerados.
 ```
-
-Não responda apenas com exemplos do conteúdo. Crie ou atualize efetivamente os arquivos no diretório do projeto.
+```
 ```
