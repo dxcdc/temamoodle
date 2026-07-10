@@ -1,62 +1,123 @@
-# Guia de Infraestrutura do Moodle 5.0 (Edição Customizada CDC)
+# Guia de Infraestrutura e Topologia Docker - CDC Moodle
 
-Este documento descreve a infraestrutura técnica, os requisitos, o guia de instalação automatizada e as políticas de backup para a plataforma Moodle 5.0 com o tema **CDC Moodle** em ambiente de produção (Docker/Easypanel).
-
----
-
-## 1. Visão Geral e Propósito
-O Moodle é o Sistema de Gestão da Aprendizagem (LMS) mais utilizado no mundo. Esta versão foi construída sob medida para o **Centro de Desenvolvimento e Cidadania (CDC)** usando PHP 8.3 oficial, compilando nativamente as dependências essenciais (`gd`, `intl`, `zip`, `exif`) para garantir segurança, desempenho e estabilidade de longo prazo.
+Este documento descreve a topologia de rede, a estrutura de volumes persistentes e a parametrização do arquivo de ambiente para o Moodle 5+ e o banco de dados MariaDB rodando em contêineres Docker.
 
 ---
 
-## 2. Anatomia Técnica
-* **Servidor Web:** Apache (nativamente na porta 80).
-* **Diretório Público:** Por questões de segurança do Moodle 5.x, o Apache aponta exclusivamente para a pasta `/var/www/html/public`. Isso isola e protege o arquivo vital `config.php` de acessos diretos externos.
-* **Banco de Dados:** MariaDB 11+ rodando em contêiner separado na mesma rede interna do Docker.
+## 1. Topologia de Rede Isolada
+
+Para garantir que o banco de dados da plataforma não sofra ataques cibernéticos ou tentativas de invasão externas, aplicamos um isolamento estrito de redes:
+
+```
+[ Usuário ] ----> [ HTTPS (443) / Traefik Proxy ]
+                               |
+                               v
+                       [ Rede: web-network ]
+                               |
+                               v
+                  [ Container: cdc-moodle-app ]
+                               |
+                               v
+                       [ Rede: db-network ] (Sem internet/isolada)
+                               |
+                               v
+                  [ Container: cdc-moodle-db ]
+```
+
+* **`web-network`:** Rede pública interna onde o contêiner do Moodle se comunica com o Proxy Reverso (Traefik/Nginx) para receber requisições dos usuários.
+* **`db-network` (Isolada):** Rede privada criada especificamente para comunicação interna exclusiva entre o Moodle e o MariaDB. O banco de dados **não** possui exposição de portas para o host da VPS ou para a internet.
 
 ---
 
-## 3. Instalação e Configuração (Suporte a Variáveis de Ambiente)
-Diferente das instalações padrão, esta imagem customizada foi reestruturada para suportar configuração automática via variáveis de ambiente no Docker/Easypanel. Ela gera o arquivo `config.php` dinamicamente no boot do Apache.
+## 2. Docker Compose de Referência (`docker-compose.yml`)
 
-Configure as seguintes variáveis na aba **Environment (Ambiente)** do Easypanel para o App Moodle:
-* `MOODLE_DB_HOST`: Host interno do banco de dados (padrão: `moodle-db`).
-* `MOODLE_DB_NAME`: Nome do banco de dados SQL (padrão: `moodle_db`).
-* `MOODLE_DB_USER`: Usuário do banco de dados (padrão: `mariadb`).
-* `MOODLE_DB_PASS`: Senha do banco (deve ser a mesma gerada pelo Easypanel no MariaDB).
-* `MOODLE_WWWROOT`: URL completa com protocolo (ex: `https://educa.cdc.org.br`).
+Abaixo está a arquitetura Docker Compose padrão para staging e produção:
+
+```yaml
+version: '3.8'
+
+services:
+  # Banco de Dados MariaDB 11.4
+  moodle-db:
+    image: mariadb:11.4
+    container_name: cdc-moodle-db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - moodle_db_data:/var/lib/mysql
+    networks:
+      - db-network
+    restart: always
+
+  # Servidor Moodle (Apache + PHP 8.3)
+  moodle-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cdc-moodle-app
+    depends_on:
+      - moodle-db
+    environment:
+      MOODLE_DB_HOST: moodle-db
+      MOODLE_DB_NAME: ${DB_NAME}
+      MOODLE_DB_USER: ${DB_USER}
+      MOODLE_DB_PASS: ${DB_PASSWORD}
+      MOODLE_WWWROOT: ${WWW_ROOT_URL}
+      SSL_PROXY: "true"
+    volumes:
+      - moodledata_volume:/var/www/moodledata
+    ports:
+      - "8080:80"
+    networks:
+      - db-network
+      - web-network
+    restart: always
+
+networks:
+  db-network:
+    driver: bridge
+    internal: true # Bloqueia qualquer tráfego externo para esta rede
+  web-network:
+    driver: bridge
+
+volumes:
+  moodle_db_data:
+  moodledata_volume:
+```
 
 ---
 
-## 4. Guia de Volumes e Backups (CRÍTICO)
-* **Persistência de Dados:** **APENAS** o diretório `/var/www/moodledata` (onde ficam os arquivos carregados por professores e alunos, logs e sessões) deve ser montado como volume persistente.
-* **NÃO persista a pasta `/var/www/html`:** Persistir esta pasta sobrescreve os novos deploys do Dockerfile (incluindo o Composer, o tema customizado e o config.php dinâmico). Deixe o código-fonte rodar diretamente da imagem compilada.
-* **Backup:** Faça backup diário do volume do `/var/www/moodledata` e do volume de dados do MariaDB. Force o acesso via HTTPS pelo Proxy Reverso (Traefik/Nginx) habilitando o SSL.
+## 3. Modelo de Parametrização (`.env.example`)
+
+Para manter o repositório seguro e em conformidade com as melhores práticas de segurança de dados, crie um arquivo `.env` local copiando os placeholders do modelo abaixo. **Nunca** envie arquivos `.env` com senhas ativas para o Git!
+
+```env
+# URL de acesso ao Moodle (Sem barra no final)
+# Staging: http://localhost:8080 | Produção: https://educa.cdc.org.br
+WWW_ROOT_URL=https://educa.cdc.org.br
+
+# Dados de Conexão do Banco de Dados
+DB_NAME=moodle_db
+DB_USER=cdc_moodle_user
+DB_PASSWORD=insira_uma_senha_forte_aqui
+DB_ROOT_PASSWORD=insira_a_senha_root_do_db_aqui
+
+# Configurações do SMTP (Postal)
+# Host de disparo e porta identificados em produção (Porta 25 com criptografia STARTTLS/Nenhum)
+SMTP_HOST=postal.cdc.org.br:25
+SMTP_USER=org/servidor/chave
+SMTP_PASS=senha_da_chave_smtp
+SMTP_NO_REPLY=nao-responda@cdc.org.br
+```
 
 ---
 
-## 5. Possíveis Impeditivos ao Subir / Atualizar (Atenção ao Dockerfile)
-Como este Moodle é compilado do zero, existem fatores externos que podem quebrar o comando `docker build`:
-1. **Mudança de Branch no GitHub:** O Dockerfile clona a branch `MOODLE_502_STABLE`. Se a Moodle HQ lançar novas versões e remover branches antigas, o build falhará. Sempre mantenha o número da branch atualizado.
-2. **Atualizações do PHP:** O Moodle 5 exige PHP 8.3+. Se a imagem base `php:8.3-apache` for alterada no futuro, novas bibliotecas do Linux (no `apt-get`) podem ser exigidas.
+## 4. Persistência de Dados e Montagem de Volumes
 
----
-
-## 6. Troubleshooting Rápido
-* **Erro 'rootdirpublic' ou 'Forbidden':** O Moodle 5 exige que a pasta web seja a `/public`. O nosso Dockerfile já faz essa injeção no Apache, mas se você tentar acessar e der erro, verifique se não há contêineres antigos rodando na mesma porta.
-* **Erro de Conexão com o Banco (using password: NO):** Verifique se a variável de ambiente `MOODLE_DB_PASS` foi salva corretamente na aba *Environment* do App do Moodle no Easypanel (e não no MariaDB) e se você clicou em **Deploy** após salvar.
-* **Tela Branca de Permissão:** Verifique se as permissões da pasta `/var/www/moodledata` estão aplicadas como `www-data` no Dockerfile. O Moodle se recusa a iniciar se não tiver acesso de gravação.
-
----
-
-## 7. Configuração do Cron em Produção (Docker)
-Para que rotinas em segundo plano (envio de e-mails de confirmação, relatórios de conclusão, backups) funcionem, o Cron do Moodle deve ser executado a cada 1 minuto.
-* **Atenção:** Deve rodar sob o usuário `www-data` do Apache para evitar colisões de permissão de escrita de arquivos na pasta `/moodledata`.
-* **Configuração na VPS (Host):**
-  1. No host da VPS, abra o crontab (`crontab -e`).
-  2. Adicione a seguinte linha no final do arquivo:
-     ```text
-     * * * * * docker exec -u www-data cdc-moodle php /var/www/html/admin/cli/cron.php >/dev/null 2>&1
-     ```
-  3. Salve e saia. O próprio Linux da VPS se encarregará de chamar o PHP dentro do container a cada 1 minuto de forma transparente.
-
+Para simplificar o fluxo de atualizações e builds automáticos:
+* **Não monte volumes na pasta do código (`/var/www/html`):** O código do tema e da aplicação Moodle deve rodar direto da imagem construída no Dockerfile. Isso permite fazer atualizações de layout na VPS simplesmente subindo uma nova versão da imagem, sem riscos de dados antigos substituírem o código novo.
+* **Volume `moodledata`:** O único diretório que deve ser montado de forma persistente é o `/var/www/moodledata`, onde o Moodle salva os dados dinâmicos enviados por alunos, imagens de cursos, certificados e arquivos de cache temporários.

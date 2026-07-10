@@ -1,65 +1,68 @@
-# Post-Mortem: Implantação e Customização do Moodle 5.0 (CDC Moodle)
+# Cultura de Pós-Incidente e Template de Post-Mortem - CDC
 
-**Autor:** Equipe de Engenharia CDC / AI Coding Assistant  
-**Data:** 01 de Julho de 2026  
-**Status:** Concluído com Sucesso  
+A cultura de pós-incidente no **Centro de Desenvolvimento e Cidadania (CDC)** é orientada para o aprendizado e melhoria contínua, baseando-se no conceito de **Blameless Post-Mortem** (Retrospectiva Sem Culpa).
+
+---
+
+## 1. Princípios da Cultura Blameless (Sem Culpa)
+
+* **Foco no Sistema, não nas Pessoas:** Quando ocorre um erro técnico, assumimos que as pessoas agiram com a melhor das intenções com as informações e ferramentas que tinham no momento. O objetivo do pós-incidente é descobrir **por que** o sistema falhou ou permitiu a falha, e não quem causou a falha.
+* **Documentação Explícita:** Cada incidente grave que cause interrupção do sistema (Downtime), travamento de inscrições ou falha geral de e-mails deve gerar um relatório de pós-morte (Post-Mortem).
+* **Foco nas Ações Preventivas:** O relatório só é considerado concluído quando ações concretas são mapeadas, com prazos e responsáveis definidos, para evitar que o exato mesmo erro aconteça novamente.
+
+---
+
+## 2. Template Padrão de Post-Mortem (Pronto para Preenchimento)
+
+Utilize o modelo estruturado abaixo para documentar novos incidentes na infraestrutura:
+
+```markdown
+# Post-Mortem: [NOME DO INCIDENTE EM CAIXA ALTA]
+
+**Autores:** [Nome dos envolvidos na análise]  
+**Data do Incidente:** [DD/MM/AAAA]  
+**Status do Relatório:** [Em Análise / Concluído / Ações Aplicadas]
 
 ---
 
 ## 1. Resumo Executivo
-Este documento descreve o processo de migração, limpeza de infraestrutura antiga e implantação da nova plataforma Moodle 5.0 customizada com o tema corporativo **CDC Moodle** (baseado no design Uena) na VPS Hostinger sob o painel Easypanel. O projeto atingiu 100% de estabilidade, desempenho otimizado (redução de 47% no tamanho do tema) e acessibilidade de ponta.
+*Forneça um parágrafo resumindo o que aconteceu, qual o impacto percebido pelos usuários finais (ex: alunos não receberam e-mail de confirmação de cadastro durante 4 horas) e como o sistema foi restaurado.*
 
 ---
 
-## 2. Linha do Tempo e Incidentes (O que deu errado e como foi resolvido)
-
-### Incidente A: Erro de Codificação de Caracteres no Banco (UTF-8)
-* **Sintoma:** O instalador do Moodle 5 bloqueou o avanço no assistente de instalação apontando o erro `unicode: must be installed and enabled`.
-* **Causa:** O MariaDB cria novos esquemas de banco de dados com a codificação padrão de sistema (`latin1` ou `utf8`), mas o Moodle 5 exige estritamente a codificação `utf8mb4_unicode_ci`.
-* **Resolução:** Execução de comando SQL via terminal da VPS alterando as tabelas e o banco de dados ativo:
-  ```sql
-  ALTER DATABASE moodle_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-  ```
-
-### Incidente B: Perda de Variáveis de Ambiente no PHP/Apache
-* **Sintoma:** A conexão com o banco de dados falhava com o erro `using password: NO`, mesmo com as variáveis de conexão definidas no Easypanel.
-* **Causa:** O Apache em modo Prefork/mod_php por padrão limpa as variáveis de ambiente do shell para segurança, fazendo com que `getenv()` retornasse vazio para a senha do banco.
-* **Resolução:** Adição da diretiva `PassEnv` no arquivo de configuração do Apache pelo Dockerfile, instruindo-o a expor explicitamente as variáveis de banco de dados do contêiner para o PHP.
-
-### Incidente C: Sobrescrita de Imagem por Volume Persistente (`/var/www/html`)
-* **Sintoma:** Qualquer alteração no Dockerfile (como compilação de Composer ou criação do config.php dinâmico) não surtia efeito na VPS.
-* **Causa:** O Easypanel montava um volume persistente diretamente em `/var/www/html`. No Docker, volumes montados sobrepõem os arquivos compilados da imagem no Dockerfile.
-* **Resolução:** Ajuste de arquitetura de persistência: o volume do código (`/var/www/html`) foi removido, permitindo que a imagem rode limpa e direta do Dockerfile. Apenas a pasta de dados (`/var/www/moodledata`) foi mantida como persistente.
-
-### Incidente D: Caching de Build no Git Clone do Dockerfile
-* **Sintoma:** Atualizações de código enviadas ao GitHub do tema não eram aplicadas no deploy da VPS.
-* **Causa:** O Docker armazena as camadas de instrução em cache. Como o comando `git clone` continuava idêntico no Dockerfile, o Docker reutilizava a camada antiga da memória.
-* **Resolução:** Instrução para realizar deploy forçado sem cache no Easypanel ou alteração de comentário de versão do tema no Dockerfile para invalidar o cache da camada.
-
-### Incidente E: Logotipos e Carrossel Quebrados na Tela de Login
-* **Sintoma:** A estrutura dividida e o rodapé institucional renderizavam, mas as imagens do logo e do carrossel exibiam ícones de links quebrados.
-* **Causa:** As imagens eram referenciadas a partir do caminho absoluto da raiz do site (`config.wwwroot`), mas o Apache aponta apenas para o diretório `/public`, impossibilitando o acesso direto às imagens locais do tema.
-* **Resolução:** Atualização dos caminhos no arquivo `login_layout.mustache` e `navbar.mustache` para utilizar o servidor de imagens interno do Moodle (`theme/image.php/cdc_moodle/...`), permitindo ao Moodle servir as imagens dinamicamente da pasta `pix/`.
-
-### Incidente F: Limitação do Moodle para Termos Opcionais e Fluxo de Cadastro
-* **Sintoma:** O Moodle esconde termos opcionais do assistente de login e os divide em telas separadas, criando atrito na jornada do aluno que precisava "logar novamente" para ver os termos.
-* **Causa:** Arquitetura do plugin `tool_policy` que força separação e só valida termos opcionais após o registro inicial.
-* **Resolução:**
-  1. Sobrescrevemos os templates do Moodle para exibir os contratos obrigatórios em caixas roláveis com aceite duplo (Confirmação de leitura + Rádio-botões SIM/NÃO coloridos).
-  2. Adicionamos suporte no tema para converter campos de perfil personalizados (como o dropdown de consentimento do WhatsApp) em botões interativos `NÃO CONCORDO` (vermelho) e `SIM, CONCORDO` (azul) na tela de cadastro, integrando à validação de campo obrigatório.
-  3. Injetamos uma barra progressiva de 2 etapas (Escolher Consentimentos ➡️ Preencher Cadastro) no topo de todo o fluxo de registro.
+## 2. Sintomas e Impacto
+* **Duração total do incidente:** [X horas e Y minutos]
+* **Impacto operacional:** [Ex: Inscrições paralisadas, lentidão de carregamento, erros 502 Bad Gateway]
+* **Quantos usuários foram afetados:** [Média estimada]
 
 ---
 
-## 3. Lições Aprendidas e Recomendações de Longo Prazo
-
-1. **Separação de Código e Dados no Docker:** Nunca persista pastas de código-fonte (`/html`) em contêineres Docker de produção. Isso quebra o pipeline de Deploy e gera bugs de cache persistentes. Persista apenas dados gerados por usuários (`moodledata`).
-2. **Depuração Silenciosa de SCSS:** O Moodle oculta erros de SCSS. Sempre valide o SCSS utilizando o script de compilação por CLI presente na documentação para evitar regressões visuais silenciosas.
-3. **Multi-Linguagem em Temas Customizados:** Sempre forneça arquivos de idioma correspondentes ao idioma de uso do site (como `lang/pt_br/`) para plugins customizados, evitando bugs de exibição de nomes técnicos (como `[[pluginname]]`).
-4. **Isolamento de Variáveis do Banco:** Não armazene senhas no Dockerfile ou código-fonte. O uso de `PassEnv` combinado com as variáveis do Easypanel provou ser a forma mais segura e flexível de gerenciar credenciais em produção.
-5. **Uso Inteligente de Campos de Perfil para Consentimentos:** Para termos opcionais (marketing, WhatsApp) que não devem travar o login do aluno, o uso de campos de perfil personalizados combinados com conversão visual via Javascript é infinitamente superior e mais limpo do que hacks no plugin de políticas padrão.
+## 3. Linha do Tempo (Eventos Críticos)
+*Registre de forma cronológica (com data e hora) a sequência de eventos desde a ocorrência do erro até a resolução:*
+* **[HH:MM]** - O incidente teve início.
+* **[HH:MM]** - O erro foi detectado via [Ex: Monitoramento automático / Ticket de suporte].
+* **[HH:MM]** - Início da investigação pela equipe.
+* **[HH:MM]** - Aplicação da ação de mitigação temporária [Ex: Reinício do container / Rollback].
+* **[HH:MM]** - O tráfego e os serviços voltaram à normalidade.
 
 ---
 
-## 4. Conclusão
-A implantação do Moodle 5.0 e do tema CDC Moodle consolidou uma plataforma moderna, de alta performance e totalmente pronta para escala. A adoção de boas práticas de DevOps e a automação do build garantem que futuras atualizações sejam simples de manter e livres de erros.
+## 4. Análise da Causa Raiz (Os 5 Porquês)
+*Use a técnica dos "5 Porquês" para investigar a causa sistêmica do problema:*
+1. **Por que o Moodle parou de enviar e-mails?** Porque a conexão SMTP na porta 587 foi recusada.
+2. **Por que a conexão foi recusada?** Porque o Postal estava escutando e aceitando conexões na porta 25.
+3. **Por que tentamos conectar na porta 587 se ele ouvia na porta 25?** Porque a documentação inicial do provedor apontava a 587 como padrão e o ambiente de testes local não simulou o servidor Postal ativo.
+4. **Por que o teste local não simulou o Postal?** [Continue a lógica...]
+5. **Por que...?** [Identifique a falha estrutural].
+
+---
+
+## 5. Ações Corretivas e Preventivas
+*Mapeie as ações técnicas necessárias para blindar o sistema contra reincidência do mesmo problema:*
+
+| Ação Preventiva / Corretiva | Tipo | Responsável | Prazo | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| Ex: Atualizar porta SMTP no Moodle para `:25` | Imediato | [Nome] | [Data] | [Pendente/Concluído] |
+| Ex: Inserir teste de ping e telnet no guia de migração | Preventivo | [Nome] | [Data] | [Pendente/Concluído] |
+| Ex: Criar rotina de teste de disparo semanal | Longo Prazo | [Nome] | [Data] | [Pendente/Concluído] |
+```

@@ -1,189 +1,29 @@
-# CDC Moodle Theme (`theme_cdc_moodle`)
+# EAD CDC - Centro de Desenvolvimento e Cidadania
 
-[![Moodle Version](https://img.shields.io/badge/Moodle-5.0%20%7C%204.4%2B-orange.svg?style=flat-square)](https://moodle.org)
-[![PHP Compatibility](https://img.shields.io/badge/PHP-8.3%20%7C%208.2-blue.svg?style=flat-square)](https://php.net)
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-lightgrey.svg?style=flat-square)](http://www.gnu.org/licenses/gpl-3.0.html)
-[![Release](https://img.shields.io/badge/Release-v1.0.0--stable-green.svg?style=flat-square)](https://github.com/dxcdc/temamoodle/releases)
+![Moodle Version](https://img.shields.io/badge/Moodle-5.x-orange?logo=moodle&logoColor=white)
+![Postal Version](https://img.shields.io/badge/Postal-3.3.7-blue?logo=mail.ru&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-11.4-blue?logo=mariadb&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Ativo-green)
 
-O **CDC Moodle Theme** é um tema filho do *theme_boost* desenvolvido sob medida para a plataforma Moodle 5+, inspirado no design moderno e sofisticado do *Uena Admin Template*. Ele combina a robustez e estabilidade do núcleo Boost com componentes de UI refinados e recursos dedicados à melhoria da experiência de aprendizagem e acessibilidade.
-
----
-
-## 🌟 Funcionalidades e Diferenciais
-
-* **Aparência Premium & Clean:** Sombras neutras otimizadas, bordas arredondadas e layouts limpos para reduzir o cansaço visual.
-* **Acessibilidade Nativa (WCAG):**
-  - Controle dinâmico de escala de fonte.
-  - Alternador para fonte especial **OpenDyslexic**.
-  - Modo escuro integrado de alto contraste.
-* **Largura de Container Ajustável:** Escolha rápida entre `Wide` (tela cheia para visualização de mídias), `Boxed` (1200px para leitura confortável) e `Wide Boxed` (1500px).
-* **Presets de Cores Rápidos:** Alternador de marca integrado com esquemas de cores pré-definidos (Laranja CDC, Azul Oceano, Verde Floresta).
-* **Login customizado:** Tela de login totalmente personalizada com carrossel dinâmico de destaques e alinhamento responsivo para o botão de visualização de senha.
+Este diretório contém os códigos-fonte, pacotes compilados e guias arquiteturais para a plataforma de EAD do **CDC**, com o tema customizado **CDC Moodle** (baseado no design premium Uena) e infraestrutura baseada em Docker.
 
 ---
 
-## 📋 Requisitos de Sistema
+## 🚀 Guias e Documentação de Infraestrutura e DevOps
 
-* **Moodle:** 4.4.x ou 5.0.x (ou superior)
-* **Tema Pai:** `theme_boost` (deve estar instalado e habilitado)
-* **PHP:** 8.2 ou 8.3 (compilado com suporte a `gd` e `intl`)
+Abaixo estão os links para os documentos técnicos detalhados disponíveis no diretório `docs/`:
 
----
-
-## 🚀 Instalação e Ativação
-
-### 1. Clonar o Repositório
-Acesse o diretório raiz da sua instalação Moodle e navegue até a pasta de temas:
-```bash
-cd /var/www/html/theme/
-```
-
-Clone este repositório criando a pasta correspondente ao componente (`cdc_moodle`):
-```bash
-git clone https://github.com/dxcdc/temamoodle.git cdc_moodle
-```
-
-### 2. Ativar o Tema
-1. Faça login na sua plataforma Moodle como Administrador.
-2. Acesse: `Administração do site > Aparência > Seletor de temas`.
-3. Localize o dispositivo correspondente (Padrão/Default) e clique em **Alterar tema**.
-4. Selecione o tema **CDC Moodle** e clique em **Salvar mudanças**.
+1. 📂 **[Estratégia de Execução](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/estrategia_execu%C3%A7%C3%A3o.md):** Planejamento de repositórios Git separados para tema e infraestrutura, e o fluxo de testes em ambiente de staging local.
+2. 📖 **[Manual de Migração e Auditoria](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/migration_guide.md):** Manual de conexões SSH, comandos Linux de diagnóstico em modo leitura e scripts para download e backup da VPS.
+3. 🐳 **[Guia de Infraestrutura e Docker](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/ajuda_infra.md):** Desenho completo da topologia de rede isolada do MariaDB, do arquivo `docker-compose.yml` e modelo de variáveis `.env.example`.
+4. 📋 **[Cultura e Template de Post-Mortem](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/postmortem.md):** Diretrizes para análise retrospectiva sem culpa de falhas no servidor e template padrão de relatório de incidentes.
+5. 🛠️ **[Manual de Resolução de Problemas (Troubleshooting)](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/troubleshooting.md):** Soluções práticas para permissões de escrita, travamento de charset no banco, depurador de SCSS e portas SMTP do Postal.
+6. 💾 **[Política de Backup e Recuperação](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/politica%20de%20BKP.md):** Planejamento de backup 3-2-1, script Bash avançado criptografado via GPG com notificações Discord/Slack e roteiro de restore.
+7. 🤖 **[Hub de Contexto e Prompts de IA](file:///home/vier/Documentos/Code/Temas/moodle/cdc_moodle/docs/prompt%20de%20IA.md):** Prompt de System Context e receitas prontas para interações ágeis e co-pilotagem de suporte com Inteligências Artificiais.
 
 ---
 
-## 🛠️ Guia do Desenvolvedor (CLI & Docker)
+## 💡 A Importância de Manter a Documentação Viva
 
-Caso precise realizar manutenções locais ou estender o tema dentro do ambiente de contêineres Docker da CDC:
-
-### Compilação e Validação do SCSS
-O compilador de SCSS do Moodle reverte silenciosamente para o Bootstrap padrão em caso de exceções no código compilado. Para depurar e validar seu código SCSS com exibição de erros no terminal, utilize o script CLI abaixo:
-
-```bash
-docker exec cdc-moodle php -r "
-  define('CLI_SCRIPT', true); require('/var/www/html/config.php');
-  \$theme = theme_config::load('cdc_moodle'); \$compiler = new core_scss();
-  \$compiler->prepend_raw_scss(\$theme->get_pre_scss_code());
-  \$ref = new ReflectionObject(\$theme); \$method = \$ref->getMethod('get_scss_property');
-  \$method->setAccessible(true); list(\$paths, \$scss) = \$method->invoke(\$theme);
-  if (is_string(\$scss)) { \$compiler->set_file(\$scss); }
-  else { \$compiler->append_raw_scss(\$scss(\$theme)); \$compiler->setImportPaths(\$paths); }
-  \$compiler->append_raw_scss(\$theme->get_extra_scss_code());
-  try { \$compiler->to_css(); echo 'SUCCESS\n'; }
-  catch (Exception \$e) { echo 'ERROR: ' . \$e->getMessage() . '\n'; }
-"
-```
-
-### Limpeza de Cache de Assets
-Para forçar a atualização imediata dos scripts JavaScript (AMD) e estilos CSS compilados, execute:
-```bash
-docker exec cdc-moodle php /var/www/html/admin/cli/purge_caches.php
-```
-
----
-
----
-
-## 🐳 Implantação Automatizada em Produção (Docker / Easypanel)
-
-Este repositório foi projetado para permitir implantação 100% automatizada (Infrastructure as Code) usando Docker e painéis como o **Easypanel**. O Moodle é configurado dinamicamente no boot usando variáveis de ambiente.
-
-### 1. Dockerfile Recomendado
-Utilize o `Dockerfile` abaixo no seu serviço de aplicação do Easypanel. Ele compila o PHP 8.3, instala o Composer, baixa as dependências, clona o tema do GitHub e gera o `config.php` dinâmico:
-
-```dockerfile
-FROM php:8.3-apache
-LABEL maintainer="CDC"
-
-# Instalar bibliotecas essenciais e Git
-RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libxml2-dev libzip-dev libicu-dev \
-    mariadb-client git curl unzip && rm -rf /var/lib/apt/lists/*
-
-# Instalar Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Instalar extensões do PHP
-RUN docker-php-ext-configure gd --with-jpeg \
-    && docker-php-ext-install gd intl mysqli zip soap opcache exif
-
-# Baixar Moodle, Tema CDC, Plugin Custom Certificate e instalar dependências do Composer
-RUN rm -rf /var/www/html/* \
-    && git clone --depth 1 --branch MOODLE_502_STABLE https://github.com/moodle/moodle.git /var/www/html \
-    && git clone --depth 1 https://github.com/dxcdc/temamoodle.git /var/www/html/theme/cdc_moodle \
-    && git clone --depth 1 --branch MOODLE_502_STABLE https://github.com/markn86/moodle-mod_customcert.git /var/www/html/mod/customcert \
-    && cd /var/www/html \
-    && composer install --no-dev --classmap-authoritative
-
-# Criar config.php dinâmico baseado em variáveis de ambiente
-RUN echo '<?php \n\
-unset($CFG); \n\
-global $CFG; \n\
-$CFG = new stdClass(); \n\
-$CFG->dbtype    = "mariadb"; \n\
-$CFG->dblibrary = "native"; \n\
-$CFG->dbhost    = getenv("MOODLE_DB_HOST") ?: "moodle-db"; \n\
-$CFG->dbname    = getenv("MOODLE_DB_NAME") ?: "moodle_db"; \n\
-$CFG->dbuser    = getenv("MOODLE_DB_USER") ?: "mariadb"; \n\
-$CFG->dbpass    = getenv("MOODLE_DB_PASS") ?: ""; \n\
-$CFG->prefix    = "mdl_"; \n\
-$CFG->dboptions = array ( \n\
-  "dbpersist" => 0, \n\
-  "dbport" => 3306, \n\
-  "dbsocket" => "", \n\
-  "dbcollation" => "utf8mb4_unicode_ci", \n\
-); \n\
-$CFG->wwwroot   = getenv("MOODLE_WWWROOT") ?: "https://educa.cdc.org.br"; \n\
-$CFG->dataroot  = "/var/www/moodledata"; \n\
-$CFG->admin     = "admin"; \n\
-$CFG->directorypermissions = 0777; \n\
-$CFG->sslproxy  = true; \n\
-$CFG->theme     = "cdc_moodle"; \n\
-require_once(__DIR__ . "/lib/setup.php");' > /var/www/html/config.php
-
-RUN chown -R www-data:www-data /var/www/html
-
-# Ajustar configurações recomendadas do PHP para o Moodle não travar
-RUN echo "max_input_vars = 5000" >> /usr/local/etc/php/conf.d/moodle.ini \
-    && echo "memory_limit = \${PHP_MEMORY_LIMIT:-512M}" >> /usr/local/etc/php/conf.d/moodle.ini \
-    && echo "upload_max_filesize = 100M" >> /usr/local/etc/php/conf.d/moodle.ini \
-    && echo "post_max_size = 100M" >> /usr/local/etc/php/conf.d/moodle.ini
-
-# Configurar diretório público e expor variáveis no Apache
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-RUN echo "PassEnv MOODLE_DB_HOST MOODLE_DB_NAME MOODLE_DB_USER MOODLE_DB_PASS MOODLE_WWWROOT PHP_MEMORY_LIMIT" > /etc/apache2/conf-available/expose-env.conf \
-    && a2enconf expose-env
-
-EXPOSE 80
-CMD ["apache2-foreground"]
-```
-
-### 2. Variáveis de Ambiente Necessárias (App Moodle)
-Na aba **Environment** da sua aplicação no Easypanel, defina:
-* `MOODLE_DB_PASS`: Senha gerada no banco de dados MariaDB.
-* `MOODLE_WWWROOT`: Endereço web completo do site (ex: `https://educa.cdc.org.br`).
-* `PHP_MEMORY_LIMIT`: Limite de alocação de memória do PHP (padrão recomendado: `512M`).
-
-### 3. Regra Crítica de Volumes (Evite Sobrescrever o Código)
-* **`/var/www/moodledata`**: Deve ser montado como volume persistente (necessário para armazenar uploads dos alunos).
-* **`/var/www/html`**: **NÃO deve ser montado como volume!** Se montado, o Docker ignorará os deploys e ocultará o tema e as dependências do Composer.
-
-### 4. Ajuste de Codificação do MariaDB
-Ao criar o banco de dados MariaDB, execute este comando no terminal da VPS para definir a codificação UTF-8 exigida pelo Moodle 5:
-```bash
-docker exec -i <CONTAINER_ID_DO_BANCO> mariadb -u mariadb -p<SENHA_DO_BANCO> -e "ALTER DATABASE moodle_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-```
-
----
-
-## 📄 Licença e Propriedade Intelectual
-
-### 🔒 Direitos Reservados e Propriedade do CDC
-Este tema é uma tecnologia desenvolvida e customizada sob medida para o **Centro de Desenvolvimento de Conteúdo (CDC)**. A identidade visual, os logotipos corporativos, o design de interface e os ativos de marca associados a este tema são de propriedade intelectual exclusiva do CDC. 
-
-Qualquer reprodução, distribuição, modificação secundária ou uso deste tema por terceiros requer consentimento e autorização formal por escrito. Para solicitações de licenciamento, parcerias ou autorizações de uso, entre em contato diretamente com o CDC.
-
-### ⚖️ Licença de Código (Moodle GPLv3)
-Por ser uma extensão derivada da plataforma Moodle (software livre), a lógica do código-fonte deste plugin é distribuída em conformidade com a licença **GNU General Public License v3** (GPLv3).
+Esta documentação foi concebida não apenas como um histórico estático, mas como um **ativo operacional crítico** da equipe de tecnologia do CDC. O Moodle e o Postal rodam sob infraestruturas de microsserviços integradas cuja topologia e segredos técnicos devem permanecer claros. É dever de cada desenvolvedor, engenheiro de DevOps e assistente de inteligência artificial revisar, testar e **atualizar continuamente estes guias** a cada nova atualização de layout, migração de rede ou correção aplicada ao ecossistema, prevenindo retrabalhos e garantindo a continuidade do conhecimento.

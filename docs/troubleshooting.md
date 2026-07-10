@@ -1,14 +1,42 @@
-# Guia de Troubleshooting e Lições Aprendidas - CDC Moodle
+# Guia de Troubleshooting de Ambiente Local e Docker - CDC Moodle
 
-Este documento detalha os principais desafios técnicos enfrentados durante o desenvolvimento do tema **CDC Moodle** (baseado no Uena), bem como as soluções aplicadas e os procedimentos de depuração em produção.
+Este guia rápido reúne soluções práticas passo a passo para resolver problemas comuns de permissões, banco de dados, compilação de estilo e e-mails durante o desenvolvimento e suporte local/Docker do Moodle 5+.
 
 ---
 
-## 1. Compilação Silenciosa do SCSS (Crítico)
-* **O Problema:** O compilador SCSS interno do Moodle falha silenciosamente. Se houver qualquer erro de sintaxe, variável indefinida ou mixin inválido, o Moodle intercepta a exceção e carrega o arquivo Bootstrap padrão (`boost`). Nunca presuma que o SCSS compilou com sucesso apenas porque a página carregou sem erro.
-* **A Solução:** Sempre que fizer alterações de estilo no SCSS, rode o script CLI abaixo no terminal da VPS para testar a compilação explícita no compilador e ver erros na tela:
+## 1. Problemas de Permissão de Escrita (`moodledata`)
+
+* **Sintoma:** O Moodle trava no instalador com uma tela branca ou exibe mensagens de erro indicando que não consegue escrever arquivos na pasta de dados.
+* **Causa:** No Linux e em ambientes Docker, a pasta `moodledata` deve pertencer ao usuário do servidor web (`www-data`). Se ela for criada manualmente ou acessada por root, o Apache perde o acesso de gravação.
+* **Solução:** Acesse o terminal da VPS e execute:
   ```bash
-  docker exec -it $(docker ps -qf name=moodle | head -n1) php -r "
+  # Mudar o dono da pasta recursivamente para o usuário do Apache
+  sudo chown -R www-data:www-data /var/www/moodledata
+  
+  # Forçar permissões de leitura, escrita e execução
+  sudo chmod -R 775 /var/www/moodledata
+  ```
+
+---
+
+## 2. Ajuste de Charset e Collate no MariaDB
+
+* **Sintoma:** O instalador do Moodle 5 exibe o erro crítico `unicode: must be installed and enabled` ou bloqueia o andamento da instalação com avisos de banco.
+* **Causa:** O MariaDB cria bancos por padrão usando codificações legadas (latin1 ou utf8 de 3 bytes). O Moodle 5 exige estritamente a codificação `utf8mb4_unicode_ci` (UTF-8 de 4 bytes).
+* **Solução:** Conecte-se ao seu terminal MariaDB e execute a query SQL de alteração:
+  ```sql
+  ALTER DATABASE moodle_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  ```
+
+---
+
+## 3. Depuração do SCSS (Compilação Silenciosa Falha)
+
+* **Sintoma:** Você altera arquivos SCSS na pasta `scss/uena/` ou no `lib.php`, mas as alterações não aparecem na página.
+* **Causa:** O compilador SCSS interno do Moodle falha silenciosamente. Se houver qualquer erro de sintaxe ou variável inexistente, o Moodle carrega o CSS do tema padrão (`boost`), fingindo que tudo está correto.
+* **Solução:** Rode o script CLI abaixo no terminal da VPS para testar a compilação explícita no compilador e ver erros na tela:
+  ```bash
+  docker exec -it cdc-ezpoint_moodle.1.xwi10emrzeha4xhzpmm2sy759 php -r "
     define('CLI_SCRIPT', true);
     require('/var/www/html/config.php');
     \$theme = theme_config::load('cdc_moodle');
@@ -36,97 +64,12 @@ Este documento detalha os principais desafios técnicos enfrentados durante o de
 
 ---
 
-## 2. Redirecionamento de Proxy Reverso (Reverse Proxy / SSL)
-* **O Problema:** Quando o Moodle está atrás de um proxy reverso SSL (como o Traefik do Easypanel), o proxy lida com a conexão HTTPS externa e repassa o tráfego internamente via HTTP. Isso causa loops de redirecionamento ou bloqueio de CSS/JS (Mixed Content).
-* **A Solução:** É obrigatório definir a configuração de proxy SSL no arquivo `config.php` da instalação:
-  ```php
-  $CFG->sslproxy = true;
-  ```
+## 4. Bloqueio de Conexão SMTP com o Postal (Porta 25 vs 587)
 
----
-
-## 3. Alinhamento do Ícone de Olho (Ocultar/Mostrar Senha)
-* **O Problema:** No formulário de login, os campos de entrada e botões são dispostos lado a lado. O script AMD nativo do Moodle (`core/togglesensitive`) injeta dinamicamente o botão de olho após o input de senha. Por padrão, o Bootstrap 5 permite quebra de linha (`flex-wrap: wrap`) no grupo de inputs, o que joga o ícone de olho para a linha inferior.
-* **A Solução:** Forçar o contêiner `.toggle-sensitive-wrapper` a não quebrar as linhas:
-  ```css
-  .toggle-sensitive-wrapper {
-      display: flex !important;
-      flex-wrap: nowrap !important;
-      width: 100% !important;
-  }
-  ```
-
----
-
-## 4. Presets e Gerenciamento do LocalStorage
-* **O Problema:** Ao introduzir novas variáveis ou chaves de controle (ex: `layoutContainer`, `themeBg`) no painel de acessibilidade do tema, os navegadores dos usuários que já visitaram o Moodle carregarão um objeto JSON desatualizado do `localStorage` (sem essas chaves).
-* **A Solução:** **Nunca** atribua o resultado do `JSON.parse(saved)` diretamente ao seu objeto `settings`. Faça sempre uma mescla (`$.extend`) com os valores padrão para assegurar que propriedades novas não fiquem como `undefined`:
-  ```javascript
-  var saved = localStorage.getItem('uena_accessibility_settings');
-  if (saved) {
-      try {
-          var loaded = JSON.parse(saved);
-          settings = $.extend({}, settings, loaded);
-      } catch (e) {
-          // Ignorar erros
-      }
-  }
-  ```
-
----
-
-## 5. Redimensionamento e Centralização de Layout
-* **O Problema:** Não tente aplicar `max-width` ou regras de centralização diretamente no elemento `#page.drawers`. O Moodle calcula as margens esquerdas e direitas das gavetas laterais dinamicamente via JS com base nas dimensões deste elemento, o que causa bugs de posicionamento.
-* **A Solução:** Direcione as regras de centralização e largura máxima para a classe interna `.main-inner` (ou contêiner `#topofscroll`), que envolve apenas o cabeçalho e a área de conteúdo:
-  ```css
-  #page.drawers .main-inner,
-  .main-inner {
-      max-width: var(--theme-container-width, 100%) !important;
-      margin-left: auto !important;
-      margin-right: auto !important;
-      width: 100% !important;
-      transition: max-width 0.22s ease-in-out !important;
-  }
-  ```
-
----
-
-## 6. Ajuste de Estilos de Avatar e Iniciais do Menu de Usuário
-* **O Problema:** O botão do menu do usuário (`#user-menu-toggle`) herda propriedades nativas de botões. É imperativo remover a seta do dropdown (`::after { display: none !important }`) e resets de borda/foco para manter o avatar limpo.
-* **A Solução:** Estilize as iniciais (`.userinitials`) com cores da marca CDC (laranja translúcido no fundo e texto em laranja escuro) para evitar que o visual cinza padrão quebre a estética moderna:
-  ```css
-  .usermenu .avatar span.userinitials {
-      background-color: rgba(255, 114, 13, 0.1) !important;
-      color: #FF720D !important;
-      font-weight: 600 !important;
-      border-radius: 50% !important;
-  }
-  ```
-
----
-
-## 7. Múltipla Escolha Customizada para Políticas (Consentimento LGPD/Contato)
-* **O Problema:** O Moodle serve por padrão checkboxes para termos obrigatórios e rádio-botões comuns para termos opcionais. A equipe desejava uma UI mais viva, onde o usuário escolhesse entre "NÃO CONCORDO" (em vermelho) e "SIM, CONCORDO" (em azul) através de botões interativos, além de ler os contratos em caixas roláveis (`terms-box`) de `250px`.
-* **A Solução:** 
-  1. Sobrescrevemos os templates nativos do `tool_policy` (`page_viewdoc.mustache` e `page_agreedocs.mustache`) no tema.
-  2. Implementamos um script assíncrono (AJAX) que lê o link de visualização do contrato completo e injeta o texto na caixa rolável de forma inline.
-  3. Transformamos os inputs em botões estilizados, controlando as cores via CSS e a lógica de envio através de rádio-botões com valores `0` (Não) e `1` (Sim) que alimentam perfeitamente o validador nativo de backend do Moodle.
-
----
-
-## 8. Campos de Perfil Personalizados no Cadastro (Dropdown para Botões)
-* **O Problema:** O Moodle só exibe termos obrigatórios no bloqueio de login (wizard). Termos opcionais (como o de WhatsApp) são ignorados. Uma alternativa é criar um campo de perfil personalizado do tipo "Menu de escolha" no cadastro, mas o Moodle o renderiza como um menu suspenso (dropdown) comum e pré-seleciona a primeira opção, inviabilizando o aceite ativo e limpo.
-* **A Solução:**
-  1. No painel do Moodle, adicione uma opção em branco ou instrutiva na primeira linha do campo (Ex: `"Escolha uma opção..."`, `"Não concordo"`, `"Sim concordo"`) e marque o campo como **Obrigatório**.
-  2. No tema (`login_layout.mustache` e `drawers.mustache`), injetamos um script JS que localiza o campo pelo nome `consentimento_contato`, oculta o select nativo e renderiza dois botões de outline (`NÃO CONCORDO` em vermelho e `SIM, CONCORDO` em azul).
-  3. Ao clicar em um dos botões, o JS atualiza o index do select oculto e dispara o evento de alteração (`change`). Se o aluno tentar cadastrar sem selecionar, o Moodle bloqueia o envio exibindo o erro em vermelho nativo por estar com a opção padrão (vazia).
-
----
-
-## 9. Wizard de Cadastro Progressivo em 2 Etapas
-* **O Problema:** Dividir o cadastro em termos e preenchimento de dados pode confundir o aluno, parecendo que ele precisa reiniciar o fluxo de login ao ser redirecionado de uma página para outra.
-* **A Solução:** Criamos uma barra progressiva visual unificada (Wizard / Breadcrumbs) injetada nos cabeçalhos dos templates:
-  * **Etapa 1 (Escolher Consentimentos):** Ativa na página de termos (`view.php?status=1`).
-  * **Etapa 2 (Preencher Cadastro):** Ativa com a Etapa 1 marcada com um check de concluído (✔) na página de cadastro (`signup.php`).
-  Isso guia o aluno de forma suave pelas 2 únicas fases do registro.
-
+* **Sintoma:** Moodle exibe o erro: *"Seu site não pôde se comunicar com seu servidor de e-mail."* ao enviar mensagens de teste.
+* **Causa:** A porta padrão recomendada para SMTP seguro (`587`) pode estar fechada na VPS do Postal ou o serviço está escutando na porta padrão de e-mails (`25`). Adicionalmente, forçar conexão TLS em portas que usam STARTTLS causa falha instantânea no handshake.
+* **Solução:** 
+  1. No Moodle (**Administração do site > Servidor > E-mail > Configurações de saída**):
+     * Defina o **Servidor SMTP** como: `postal.cdc.org.br:25` (Porta 25).
+     * Defina a **Segurança SMTP** como: **Nenhum** (Isso inicia a conexão em texto puro e negocia a segurança *STARTTLS* de forma transparente).
+  2. Garanta que o domínio do remetente (Ex: `@cdc.org.br`) esteja adicionado e validado (SPF/DKIM) na aba **Domains** do painel do Postal.
