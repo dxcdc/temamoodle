@@ -85,17 +85,22 @@ Analise a importação de componentes no arquivo `scss/uena/` e me sugira formas
 Aqui está o prompt completo e enriquecido que você deve usar na próxima conversa para carregar todo o seu ecossistema técnico instantaneamente:
 
 ```text
-Atue como um Arquiteto de Soluções e Especialista em DevOps Sênior. Estou utilizando o repositório cdc_moodle no meu workspace.
+Atue como um Arquiteto de Soluções e Especialista em DevOps Sênior. Preciso estruturar a documentação de infraestrutura, backup e suporte deste projeto diretamente no meu diretório de trabalho local.
 
-Por favor, analise a documentação que estruturamos em docs/ para prosseguirmos:
-1. cdc_moodle/docs/estrategia_execução.md: Planejamento de repositórios Git, fluxo de branches e staging local.
-2. cdc_moodle/docs/migration_guide.md: Guia de conexão SSH, comandos Linux de diagnóstico (Docker, rede, processos) e backup.
-3. cdc_moodle/docs/ajuda_infra.md: Topologia Docker Compose, isolamento de banco e variáveis de ambiente .env.
-4. cdc_moodle/docs/postmortem.md: Cultura blameless pós-incidente e template de postmortem.
-5. cdc_moodle/docs/troubleshooting.md: Manual prático de resolução de problemas locais e Docker (banco, permissões, SCSS, Postal na porta 25).
-6. cdc_moodle/docs/politica de BKP.md: Estratégia de backup 3-2-1, script Bash avançado criptografado via GPG com notificações e restore.
-7. cdc_moodle/docs/prompt de IA.md: Hub de contexto técnico e receitas operacionais do Moodle CDC.
+Para mantermos a padronização no Git e entre os nossos projetos, crie uma pasta chamada docs/ na raiz do projeto e escreva nela os seguintes 7 arquivos de documentação técnica densa:
 
-Por favor, adote estas restrições e diretrizes técnicas em todas as suas respostas a partir de agora. Leia estes documentos locais no meu workspace para entender as decisões que tomamos e me ajude nas próximas tarefas de suporte e infraestrutura.
+1. estrategia_execução.md: Planejamento de repositórios Git (código do tema cdc_moodle separado de infraestrutura/docker), fluxo de branches (main, develop, hotfix), homologação em laboratório local (staging) rodando em localhost:8080 com banco anônimo, e o wizard de cadastro progressivo em 2 etapas (Etapa 1: Consentimentos em view.php e Etapa 2: Form em signup.php).
+2. migration_guide.md: Guia de SSH seguro (chaves ED25519 e atalho config), checklist de diagnóstico em modo leitura na VPS (ss, docker stats, df) e comandos de exportação compactada de banco (mysqldump | gzip) e download.
+3. ajuda_infra.md: Arquivo docker-compose.yml de referência (Apache+PHP 8.3 + MariaDB 11.4), topologia de rede isolada (db-network privada e interna), arquivo .env.example e parametrização dos registros DNS do Postal (SPF, DKIM e Return Path CNAME) apontados na Hostinger/Registro.br.
+4. postmortem.md: Cultura de retrospectiva sem busca de culpados (blameless) e template padrão de preenchimento de incidentes (Sintomas, Timeline, 5 Porquês e Ações Preventivas).
+5. troubleshooting.md: Soluções rápidas de Moodle/Docker contendo: permissões de escrita (chown/chmod www-data), charset do MariaDB (utf8mb4_unicode_ci), compilação silenciosa do SCSS (script CLI de reflexão), alinhamento do ícone de olho da senha (flex-wrap nowrap), largura boxed (.main-inner em vez de drawers) e mesclagem do LocalStorage ($.extend contra variáveis undefined), além da conexão SMTP do Postal na porta 25 (com segurança "Nenhum" no Moodle para ativar STARTTLS).
+6. politica de BKP.md: Estratégia de backup 3-2-1, script Bash automatizado com dump de banco, compactação de diretórios excluindo caches, criptografia simétrica forte via GPG (com arquivo .gpg_passphrase externo), alertas de status para Webhook do Slack/Discord e roteiro de validação pós-restore.
+7. prompt de IA.md: Bloco de Contexto do Projeto (System Context) contendo as restrições arquiteturais específicas do tema (SCSS silencioso, LocalStorage merge, eye unmask, etc.) e receitas operacionais de prompts rápidos para suporte.
+
+Além disso, faça o seguinte:
+- README.md: Configure o README.md na raiz de forma concisa. Adicione tags/badges de estado do projeto no topo (tecnologia, status, ambiente usando Shields.io). Inclua um diagrama de arquitetura em Mermaid (usuário -> Traefik -> Moodle -> MariaDB + Postal), a árvore de diretórios do projeto, tabela de requisitos mínimos e uma cheat sheet com comandos rápidos de sobrevivência (limpar cache, testar SCSS, ler logs). Adicione links markdown em formato absoluto (file://) para os 7 arquivos de docs com um resumo de uma linha para cada. Destaque em um parágrafo final a importância de manter e evoluir continuamente esta documentação.
+- Segurança: Faça uma verificação rigorosa nos arquivos gerados para garantir que não haja nenhuma senha, token de API ou credencial real exposta (utilize apenas placeholders informativos e variáveis de ambiente).
+
+Grave os arquivos diretamente no disco e me avise quando terminar.
 ```
 
