@@ -52,3 +52,25 @@ Os e-mails de cadastro do Moodle pararam de chegar. O Moodle está configurado p
 Preciso otimizar os arquivos SCSS do tema `cdc_moodle`. 
 Analise a importação de componentes no arquivo `scss/uena/` e me sugira formas de remover seletores duplicados ou redundantes para diminuir o tamanho final do arquivo CSS compilado do Moodle.
 ```
+
+---
+
+## 3. Prompt Consolidado para Copiar (Handover DevOps)
+
+Aqui está o prompt completo e enriquecido que você deve usar na próxima conversa para carregar todo o seu ecossistema técnico instantaneamente:
+
+```text
+Atue como um Arquiteto de Soluções e Especialista em DevOps Sênior. Estou utilizando o repositório cdc_moodle no meu workspace.
+
+Por favor, analise a documentação que estruturamos em docs/ para prosseguirmos:
+1. cdc_moodle/docs/estrategia_execução.md: Planejamento de repositórios Git, fluxo de branches e staging local.
+2. cdc_moodle/docs/migration_guide.md: Guia de conexão SSH, comandos Linux de diagnóstico (Docker, rede, processos) e backup.
+3. cdc_moodle/docs/ajuda_infra.md: Topologia Docker Compose, isolamento de banco e variáveis de ambiente .env.
+4. cdc_moodle/docs/postmortem.md: Cultura blameless pós-incidente e template de postmortem.
+5. cdc_moodle/docs/troubleshooting.md: Manual prático de resolução de problemas locais e Docker (banco, permissões, SCSS, Postal na porta 25).
+6. cdc_moodle/docs/politica de BKP.md: Estratégia de backup 3-2-1, script Bash avançado criptografado via GPG com notificações e restore.
+7. cdc_moodle/docs/prompt de IA.md: Hub de contexto técnico e receitas operacionais do Moodle CDC.
+
+Por favor, adote estas restrições e diretrizes técnicas em todas as suas respostas a partir de agora. Leia estes documentos locais no meu workspace para entender as decisões que tomamos e me ajude nas próximas tarefas de suporte e infraestrutura.
+```
+
