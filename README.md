@@ -10,6 +10,86 @@ Este diretório contém os códigos-fonte, pacotes compilados e guias arquitetur
 
 ---
 
+## 🗺️ Diagrama de Arquitetura
+
+```mermaid
+graph TD
+    User[Aluno / Administrador] -->|HTTPS: 443| Proxy[Proxy Reverso: Traefik]
+    Proxy -->|Rede: web-network| Moodle[Moodle App: Apache + PHP 8.3]
+    Moodle -->|Rede: db-network isolada| DB[Banco: MariaDB 11.4]
+    Moodle -->|SMTP: Porta 25| Postal[SMTP Server: Postal]
+    Postal -->|Disparos de E-mail| User
+```
+
+---
+
+## ⚡ Guia de Inicialização Rápida (Local Staging)
+
+Para subir o ambiente de homologação local em menos de 5 minutos, execute:
+
+```bash
+# 1. Configurar variáveis locais
+cp docs/ajuda_infra.md .env  # Copie as variáveis exemplificadas e edite o .env
+
+# 2. Iniciar os contêineres Docker
+docker compose up -d
+
+# 3. Importar banco de dados de teste (opcional)
+gunzip -c backup_db.sql.gz | docker exec -i cdc-moodle-db mariadb -u cdc_moodle_user -p moodle_db
+```
+Acesse a plataforma em: `http://localhost:8080`
+
+---
+
+## 📂 Árvore de Diretórios do Projeto
+
+```text
+cdc_moodle/
+├── amd/                # Módulos Javascript assíncronos (AMD) do tema
+├── docs/               # Manuais DevOps, Guias de Migração e Políticas
+├── lang/               # Dicionários e traduções (pt_br) do tema CDC
+├── pix/                # Ativos estáticos, logotipos e imagens do carrossel
+├── scss/               # Folhas de estilo (Bootstrap 5 e overrides Uena)
+├── templates/          # Arquivos de layout Mustache (Moodle Page Layouts)
+├── README.md           # Hub centralizador e documentação geral
+├── config.php          # Arquivo de inicialização dinâmica do Moodle
+├── lib.php             # Lógica PHP do tema (SCSS assets compilation builder)
+└── version.php         # Controle de versão e cacheamento do plugin
+```
+
+---
+
+## 📋 Ficha Técnico-Operacional e Requisitos
+
+| Recurso | Mínimo Recomendado | Propósito / Detalhes |
+| :--- | :--- | :--- |
+| **CPU da VPS** | 2 vCPUs | Processamento de requisições concorrentes e cron do Moodle |
+| **Memória RAM** | 4 GB | Prevenção de estouro de memória no PHP-FPM e MariaDB |
+| **Armazenamento** | 40 GB SSD | Partição de volume para o diretório `/var/www/moodledata` |
+| **Rede** | Docker bridge | Redes isoladas `db-network` (internal) e `web-network` |
+
+---
+
+## ⏱️ Comandos Rápidos de Sobrevivência (Cheat Sheet)
+
+Use estes comandos no terminal da VPS para operações cotidianas de suporte:
+
+* **Limpar Caches do Moodle:**
+  ```bash
+  docker exec -it cdc-ezpoint_moodle.1.xwi10emrzeha4xhzpmm2sy759 php /var/www/html/admin/cli/purge_caches.php
+  ```
+* **Validar Compilação do SCSS:**
+  ```bash
+  # Executa o script CLI de diagnóstico para capturar erros silenciosos de estilos
+  docker exec -it cdc-ezpoint_moodle.1.xwi10emrzeha4xhzpmm2sy759 php -r "/* Ver script completo em docs/troubleshooting.md */"
+  ```
+* **Ler Logs do Servidor Web (Apache):**
+  ```bash
+  docker logs --tail 100 -f cdc-ezpoint_moodle.1.xwi10emrzeha4xhzpmm2sy759
+  ```
+
+---
+
 ## 🚀 Guias e Documentação de Infraestrutura e DevOps
 
 Abaixo estão os links para os documentos técnicos detalhados disponíveis no diretório `docs/`:
