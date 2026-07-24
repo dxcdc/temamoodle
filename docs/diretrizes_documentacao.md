@@ -26,7 +26,7 @@ A documentação técnica existe no CDC para garantir a continuidade operacional
 
 ## Estrutura Oficial de Documentos
 
-A documentação corporativa na pasta `docs/` é estruturada em oito arquivos técnicos:
+A documentação corporativa na pasta `docs/` é estruturada em nove arquivos técnicos:
 
 | Arquivo | Finalidade |
 | :--- | :--- |
@@ -38,6 +38,7 @@ A documentação corporativa na pasta `docs/` é estruturada em oito arquivos t�
 | `troubleshooting.md` | Guia passo a passo para corrigir erros frequentes de permissão, banco, SCSS, SMTP ou Mattermost. |
 | `politica_backup.md` | Política de backup 3-2-1, script Bash criptografado via GPG com alertas e plano de restore. |
 | `prompt_ia.md` | Contexto de sistema (System Context) e receitas de prompt prontas para co-pilotagem por IA. |
+| `backlog_issues.md` | Templates de GitHub Issues prontos para cadastrar tarefas pendentes operacionais e de infraestrutura. |
 
 ---
 

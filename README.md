@@ -122,6 +122,7 @@ Abaixo estão os links para os documentos técnicos detalhados disponíveis no d
 - [Troubleshooting](docs/troubleshooting.md) — Diagnóstico e solução de problemas recorrentes.
 - [Política de backup](docs/politica_backup.md) — Backup, criptografia, retenção, restauração e alertas no Mattermost.
 - [Contexto para IA](docs/prompt_ia.md) — Contexto arquitetural e prompts operacionais para assistentes de IA.
+- [Backlog de Issues](docs/backlog_issues.md) — Templates de GitHub Issues prontos para cadastrar tarefas pendentes operacionais e de infraestrutura.
 
 ---
 
